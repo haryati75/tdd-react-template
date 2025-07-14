@@ -52,5 +52,27 @@ describe('App increments', () => {
     await user.click(button)
     expect(button).toHaveTextContent('count is 1')
   })
+
+  it('shows message when count exceeds 3', async () => {
+    render(<App />)
+    const button = screen.getByRole('button', { name: /count is 0/i })
+
+    for (let i = 0; i < 4; i++) {
+      await user.click(button)
+    }
+
+    expect(screen.getByText("You've clicked the button more than 3 times!")).toBeInTheDocument()
+  })
+
+  it('does not show message when count is 3 or less', async () => {
+    render(<App />)
+    const button = screen.getByRole('button', { name: /count is 0/i })
+
+    for (let i = 0; i < 3; i++) {
+      await user.click(button)
+    }
+
+    expect(screen.queryByText("You've clicked the button more than 3 times!")).not.toBeInTheDocument()
+  })
 })
 
