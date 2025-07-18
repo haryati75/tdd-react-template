@@ -41,7 +41,7 @@ A complete React TypeScript template with comprehensive testing setup and automa
 
 4. **Update project configuration**:
    - Update `package.json` with your project name and details
-   - Update the `base` path in `vite.config.ts` to match your repository name:
+   - Update the `base` path in `vite.config.ts` to match your repository name (currently set to `/tdd-react-template/`):
    ```typescript
    export default defineConfig({
      base: "/your-repo-name/", // Replace with your actual repo name
@@ -62,7 +62,7 @@ A complete React TypeScript template with comprehensive testing setup and automa
 - **Unit tests**:
 
   ```bash
-  npm run test
+  npm test
   ```
 
 - **Unit tests with coverage**:
@@ -74,12 +74,30 @@ A complete React TypeScript template with comprehensive testing setup and automa
 - **End-to-end tests**:
 
   ```bash
-  npm run e2e
+  npm run test:e2e
+  ```
+
+- **View Playwright test report**:
+
+  ```bash
+  npm run test:e2e:report
   ```
 
 - **Build for production**:
+
   ```bash
   npm run build
+  ```
+
+- **Lint code**:
+
+  ```bash
+  npm run lint
+  ```
+
+- **Preview production build**:
+  ```bash
+  npm run preview
   ```
 
 #### VS Code Integration
@@ -95,12 +113,17 @@ This template includes comprehensive VS Code configuration for an enhanced devel
 **Available Tasks:**
 
 - **🚀 Start Dev Server** - Launch React development server
+- **🔨 Build Production** - Build for production deployment
 - **🧪 Test: Unit (Watch)** - Run tests in watch mode (great for TDD)
+- **🧪 Test: Unit (Run Once)** - Run unit tests once and exit
 - **📊 Test: Unit with Coverage** - Generate and view coverage reports
 - **🎭 Test: E2E (Playwright)** - Run end-to-end tests
+- **🎭 Test: E2E with UI** - Run E2E tests with Playwright UI
 - **📊 View: Coverage Report** - Generate and open coverage reports
+- **📊 View: Coverage Report (Quick)** - Open existing coverage reports
 - **🎭 View: Playwright Report** - View E2E test reports with traces
 - **🧪 Test: All (Unit + E2E)** - Run complete test suite
+- **📊 Test: All with Reports** - Run everything and generate all reports
 
 **Debugging:**
 
@@ -113,28 +136,33 @@ This template includes comprehensive VS Code configuration for an enhanced devel
 
 ### Unit Testing (Vitest + React Testing Library)
 
-- **Vitest**: Fast unit test runner
+- **Vitest**: Fast unit test runner with hot reload
 - **React Testing Library**: Testing utilities for React components
 - **Istanbul**: Code coverage reporting
 - **jsdom**: Browser environment simulation
+- **Testing Location**: Test files are co-located with source files using `.test.tsx` extension
 
 ### E2E Testing (Playwright)
 
 - **Playwright**: Cross-browser end-to-end testing
-- **Multi-browser support**: Chrome, Firefox, Safari
-- \*\*Automatic screenshots and traces on failure
+- **Multi-browser support**: Chrome, Firefox, Safari (WebKit)
+- **Automatic screenshots and traces on failure**
+- **Test Location**: All E2E tests are in the `e2e/` directory
 
 ### Example Unit Test
 
 ```typescript
-// src/tests/App.test.tsx
+// src/App.test.tsx
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App from "../App";
+import App from "./App";
 
-test("should contain React text", () => {
-  render(<App />);
-  expect(screen.getByText(/React App/i)).toBeInTheDocument();
+describe("App renders", () => {
+  it("the main heading", () => {
+    render(<App />);
+    const heading = screen.getByText("Vite + ReactTS + Vitest + Playwright");
+    expect(heading).toBeInTheDocument();
+  });
 });
 ```
 
@@ -144,9 +172,11 @@ test("should contain React text", () => {
 // e2e/my-app.spec.ts
 import { test, expect } from "@playwright/test";
 
-test("My app loads correctly", async ({ page }) => {
+test("has title", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByText("React App")).toBeVisible();
+
+  // Expect a title "to contain" a substring.
+  await expect(page).toHaveTitle(/React TDD Template/);
 });
 ```
 
@@ -219,20 +249,22 @@ your-project/
 │   └── extensions.json        # Recommended extensions
 ├── src/
 │   ├── components/            # React components
-│   ├── tests/                 # Unit tests
+│   ├── App.test.tsx           # Unit tests
 │   ├── setupTests.ts          # Test configuration
 │   └── main.tsx
 ├── e2e/                       # End-to-end tests
 ├── coverage/                  # Coverage reports (generated)
 ├── playwright-report/         # E2E test reports (generated)
-├── vite.config.ts            # Vite configuration
-├── playwright.config.ts      # Playwright configuration
+├── vite.config.ts             # Vite configuration
+├── playwright.config.ts       # Playwright configuration
 └── package.json
 ```
 
 ## Configuration Files
 
 ### Vite Configuration (`vite.config.ts`)
+
+**Current configuration** (update the base path for your repo):
 
 ```typescript
 /// <reference types="vitest" />
@@ -246,22 +278,14 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/setupTests.ts",
+    include: ["src/**/*.test.{ts,tsx}"],
     coverage: {
       provider: "istanbul",
-      exclude: ["node_modules", "dist", "src/tests", "src/main.tsx"],
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["src/main.tsx"],
     },
   },
 });
-```
-
-### TypeScript Configuration
-
-Add to `tsconfig.app.json`:
-
-```json
-{
-  "include": ["src", "node_modules/vitest/globals.d.ts"]
-}
 ```
 
 ## Development Workflow
@@ -384,7 +408,11 @@ This template includes all necessary dependencies:
 - **ESLint** - Code linting and formatting
 - **Prettier** - Code formatting
 - **Playwright** - E2E testing support
-- **JSON** - Better JSON file support
+- **Vitest Explorer** - Visual test running and debugging
+- **Test Explorer** - Additional test management
+- **Vite** - Enhanced Vite development experience
+- **React Snippets** - Helpful React code snippets
+- **Tailwind CSS** - CSS framework support (if using Tailwind)
 
 You're ready to start building with test-driven development in VS Code! 🚀
 
