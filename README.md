@@ -10,25 +10,31 @@ A complete React TypeScript template with comprehensive testing setup and automa
 - 🚀 **GitHub Actions** CI/CD pipeline
 - 📦 **Automated deployment** to GitHub Pages
 - 🎯 **Test-driven development** ready
+- 🛠️ **VS Code integration** with debugging and task automation
+- 📊 **Interactive reports** for coverage and E2E tests
 
 ## Getting Started
 
 ### Using This Template
 
 1. **Create a new repository from this template**:
+
    - Click "Use this template" button on GitHub
    - Or clone this repository:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/tdd-react-template.git my-new-project
    cd my-new-project
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Install Playwright browsers** (first time only):
+
    ```bash
    npx playwright install --with-deps
    ```
@@ -38,29 +44,35 @@ A complete React TypeScript template with comprehensive testing setup and automa
    - Update the `base` path in `vite.config.ts` to match your repository name:
    ```typescript
    export default defineConfig({
-     base: '/your-repo-name/', // Replace with your actual repo name
+     base: "/your-repo-name/", // Replace with your actual repo name
      // ... rest of config
    });
    ```
 
 ### Running the Project
 
+#### Command Line
+
 - **Development server**:
+
   ```bash
   npm run dev
   ```
 
 - **Unit tests**:
+
   ```bash
   npm run test
   ```
 
 - **Unit tests with coverage**:
+
   ```bash
   npm run test:coverage
   ```
 
 - **End-to-end tests**:
+
   ```bash
   npm run e2e
   ```
@@ -70,40 +82,71 @@ A complete React TypeScript template with comprehensive testing setup and automa
   npm run build
   ```
 
+#### VS Code Integration
+
+This template includes comprehensive VS Code configuration for an enhanced development experience:
+
+**Quick Start:**
+
+1. Open the project in VS Code
+2. Press `Ctrl+Shift+P` → "Tasks: Run Task"
+3. Choose from organized tasks with visual icons
+
+**Available Tasks:**
+
+- **🚀 Start Dev Server** - Launch React development server
+- **🧪 Test: Unit (Watch)** - Run tests in watch mode (great for TDD)
+- **📊 Test: Unit with Coverage** - Generate and view coverage reports
+- **🎭 Test: E2E (Playwright)** - Run end-to-end tests
+- **📊 View: Coverage Report** - Generate and open coverage reports
+- **🎭 View: Playwright Report** - View E2E test reports with traces
+- **🧪 Test: All (Unit + E2E)** - Run complete test suite
+
+**Debugging:**
+
+- Press `Ctrl+Shift+D` to access Run and Debug
+- **🌐 Debug: React App (Chrome)** - Debug your React app with breakpoints
+- **🧪 Debug: Unit Tests** - Debug test files with breakpoints
+- **🧪 Debug: Current Test File** - Debug the currently open test file
+
 ## Testing Stack
 
 ### Unit Testing (Vitest + React Testing Library)
+
 - **Vitest**: Fast unit test runner
 - **React Testing Library**: Testing utilities for React components
 - **Istanbul**: Code coverage reporting
 - **jsdom**: Browser environment simulation
 
 ### E2E Testing (Playwright)
+
 - **Playwright**: Cross-browser end-to-end testing
 - **Multi-browser support**: Chrome, Firefox, Safari
-- **Automatic screenshots and traces on failure
+- \*\*Automatic screenshots and traces on failure
 
 ### Example Unit Test
+
 ```typescript
 // src/tests/App.test.tsx
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import App from '../App';
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import App from "../App";
 
-test('should contain React text', () => {
+test("should contain React text", () => {
   render(<App />);
   expect(screen.getByText(/React App/i)).toBeInTheDocument();
 });
 ```
 
 ### Example E2E Test
+
 ```typescript
 // e2e/my-app.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('My app loads correctly', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.getByText('React App')).toBeVisible();
+test("My app loads correctly", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText("React App")).toBeVisible();
 });
 ```
 
@@ -112,41 +155,51 @@ test('My app loads correctly', async ({ page }) => {
 This template includes a complete GitHub Actions workflow with:
 
 ### 1. Automated Testing (`all-tests.yml`)
+
 Runs on every push and pull request:
+
 - Unit tests with coverage
 - End-to-end tests across multiple browsers
 - Test artifact uploads
 
 ### 2. Automated Deployment (`deploy.yml`)
+
 Deploys to GitHub Pages when:
+
 - Tests pass successfully
 - Changes are pushed to `main` branch
 
 ## Setting Up GitHub Pages Deployment
 
 ### 1. Repository Settings
+
 1. Go to your repository **Settings** → **Pages**
 2. Set source to **GitHub Actions** (recommended)
    - OR set source to **Deploy from a branch** and select **gh-pages** (after first deployment)
 3. Click **Save**
 
 ### 2. Actions Permissions
+
 1. Go to **Settings** → **Actions** → **General**
 2. Under **Workflow permissions**, select **Read and write permissions**
 3. Check **Allow GitHub Actions to create and approve pull requests**
 4. Click **Save**
 
 ### 3. Update Base Path
+
 Update `vite.config.ts` with your repository name:
+
 ```typescript
 export default defineConfig({
-  base: '/your-repo-name/', // Important: Use your actual repository name
+  base: "/your-repo-name/", // Important: Use your actual repository name
   // ... rest of config
 });
 ```
 
 ### 4. Deploy
+
 Push to the `main` branch and the workflow will:
+
 1. Run all tests
 2. Build the project
 3. Deploy to GitHub Pages
@@ -159,14 +212,19 @@ your-project/
 ├── .github/workflows/
 │   ├── all-tests.yml          # Test workflow
 │   └── deploy.yml             # Deployment workflow
+├── .vscode/                   # VS Code configuration
+│   ├── launch.json            # Debug configurations
+│   ├── tasks.json             # Task automation
+│   ├── settings.json          # Workspace settings
+│   └── extensions.json        # Recommended extensions
 ├── src/
 │   ├── components/            # React components
 │   ├── tests/                 # Unit tests
 │   ├── setupTests.ts          # Test configuration
 │   └── main.tsx
 ├── e2e/                       # End-to-end tests
-├── coverage/                  # Coverage reports
-├── playwright-report/         # E2E test reports
+├── coverage/                  # Coverage reports (generated)
+├── playwright-report/         # E2E test reports (generated)
 ├── vite.config.ts            # Vite configuration
 ├── playwright.config.ts      # Playwright configuration
 └── package.json
@@ -175,28 +233,31 @@ your-project/
 ## Configuration Files
 
 ### Vite Configuration (`vite.config.ts`)
+
 ```typescript
 /// <reference types="vitest" />
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: '/your-repo-name/', // Update this!
+  base: "/your-repo-name/", // Update this!
   test: {
     globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/setupTests.ts',
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.ts",
     coverage: {
-      provider: 'istanbul',
-      exclude: ['node_modules', 'dist', 'src/tests', 'src/main.tsx'],
+      provider: "istanbul",
+      exclude: ["node_modules", "dist", "src/tests", "src/main.tsx"],
     },
   },
 });
 ```
 
 ### TypeScript Configuration
+
 Add to `tsconfig.app.json`:
+
 ```json
 {
   "include": ["src", "node_modules/vitest/globals.d.ts"]
@@ -205,17 +266,79 @@ Add to `tsconfig.app.json`:
 
 ## Development Workflow
 
-1. **Write a failing test** (TDD approach)
-2. **Implement the feature** to make the test pass
-3. **Refactor** if needed
-4. **Commit and push** to trigger CI/CD
-5. **Review** test results and deployment
+### Recommended TDD Workflow in VS Code
+
+1. **Start Development Environment**:
+
+   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🚀 Start Dev Server**
+   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🧪 Test: Unit (Watch)**
+
+2. **Test-Driven Development Cycle**:
+
+   - **Write a failing test** for your new feature
+   - **Watch the test fail** (red) in the watch mode terminal
+   - **Implement the feature** to make the test pass (green)
+   - **Refactor** code while keeping tests green
+   - **Debug if needed** using `Ctrl+Shift+D` → **🧪 Debug: Current Test File**
+
+3. **Check Coverage**:
+
+   - `Ctrl+Shift+P` → "Tasks: Run Task" → **📊 View: Coverage Report**
+   - Interactive HTML report opens in your browser
+
+4. **Run E2E Tests**:
+
+   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🎭 Test: E2E (Playwright)**
+   - View results: **🎭 View: Playwright Report**
+
+5. **Complete Testing**:
+
+   - `Ctrl+Shift+P` → "Tasks: Run Task" → **📊 Test: All with Reports**
+   - Runs everything and opens all reports
+
+6. **Commit and Deploy**:
+   - **Commit and push** to trigger CI/CD
+   - **Review** GitHub Actions results and live deployment
+
+### VS Code Features
+
+#### Integrated Testing
+
+- **Watch Mode**: Tests run automatically as you code
+- **Debugging**: Set breakpoints in both source and test files
+- **Coverage Visualization**: See exactly which lines need testing
+- **E2E Traces**: Visual replay of test failures
+
+#### Smart Development
+
+- **Auto-imports**: Automatic import suggestions
+- **TypeScript Integration**: Real-time type checking
+- **ESLint**: Code quality and formatting
+- **Hot Reload**: Instant preview of changes
 
 ## Viewing Reports
 
+### VS Code Integration
+
+- **Coverage Reports**:
+  - Use task **📊 View: Coverage Report** to generate and open
+  - Or **📊 View: Coverage Report (Quick)** for existing reports
+  - Interactive HTML coverage report opens in browser
+- **Playwright Reports**:
+  - Use task **🎭 View: Playwright Report**
+  - View detailed test results, screenshots, and failure traces
+  - Interactive timeline and step-by-step debugging
+
+### Manual Access
+
 - **Coverage Report**: Open `coverage/index.html` after running `npm run test:coverage`
 - **Playwright Report**: Open `playwright-report/index.html` after running E2E tests
-- **GitHub Actions**: Check the Actions tab in your repository
+- **GitHub Actions**: Check the Actions tab in your repository for CI results
+
+### Report Features
+
+- **Coverage**: Line-by-line coverage highlighting, branch coverage, function coverage
+- **E2E Reports**: Screenshots on failure, video recordings, network logs, step traces
 
 ## Troubleshooting
 
@@ -224,12 +347,23 @@ Add to `tsconfig.app.json`:
 1. **Deployment fails**: Check the base path in `vite.config.ts` matches your repo name
 2. **Tests fail in CI**: Ensure all dependencies are in `package.json`
 3. **GitHub Pages not working**: Verify repository settings and workflow permissions
+4. **VS Code tasks not working**: Ensure you have the recommended extensions installed
+5. **Coverage report not opening**: Run tests with coverage first, then view report
+6. **Debugging not working**: Make sure dev server is running before debugging React app
+
+### VS Code Setup Issues
+
+- **Missing extensions**: VS Code will prompt to install recommended extensions
+- **Tasks not visible**: Reload window (`Ctrl+Shift+P` → "Reload Window")
+- **Debug configurations not working**: Check that file paths in `launch.json` are correct
+- **Port conflicts**: Default ports are 5173 (dev), 8080 (coverage), 8081 (alt coverage)
 
 ### Getting Help
 
 - Check the **Actions** tab for detailed error logs
 - Review the **Issues** section of this template repository
 - Ensure your repository has the correct permissions set up
+- Use VS Code's integrated terminal to see detailed error messages
 
 ---
 
@@ -242,5 +376,24 @@ This template includes all necessary dependencies:
 - **Vitest** + **React Testing Library** for unit testing
 - **Playwright** for E2E testing
 - **Istanbul** for coverage reporting
+- **http-server** for serving reports locally
 
-You're ready to start building with test-driven development! 🚀
+### VS Code Extensions (Auto-recommended)
+
+- **TypeScript** - Enhanced TypeScript support
+- **ESLint** - Code linting and formatting
+- **Prettier** - Code formatting
+- **Playwright** - E2E testing support
+- **JSON** - Better JSON file support
+
+You're ready to start building with test-driven development in VS Code! 🚀
+
+### Quick Start Checklist
+
+- [ ] Clone the template
+- [ ] Run `npm install`
+- [ ] Open in VS Code
+- [ ] Install recommended extensions (VS Code will prompt)
+- [ ] Start dev server: `Ctrl+Shift+P` → **🚀 Start Dev Server**
+- [ ] Start tests: `Ctrl+Shift+P` → **🧪 Test: Unit (Watch)**
+- [ ] Write your first test and make it pass! 🎯
