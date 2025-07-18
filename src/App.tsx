@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      <h1>Vite + ReactTS + Vitest</h1>
+      <h1>Vite + ReactTS + Vitest + Playwright</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

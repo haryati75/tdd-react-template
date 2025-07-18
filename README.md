@@ -1,4 +1,4 @@
-# TDD React/TS Trivia App Template
+# TDD React Template
 
 A complete React TypeScript template with comprehensive testing setup and automated deployment to GitHub Pages.
 
@@ -19,7 +19,7 @@ A complete React TypeScript template with comprehensive testing setup and automa
    - Click "Use this template" button on GitHub
    - Or clone this repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/trivia-app.git my-new-project
+   git clone https://github.com/YOUR_USERNAME/tdd-react-template.git my-new-project
    cd my-new-project
    ```
 
@@ -90,20 +90,20 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
-test('should display trivia question', () => {
+test('should contain React text', () => {
   render(<App />);
-  expect(screen.getByText(/trivia/i)).toBeInTheDocument();
+  expect(screen.getByText(/React App/i)).toBeInTheDocument();
 });
 ```
 
 ### Example E2E Test
 ```typescript
-// e2e/trivia.spec.ts
+// e2e/my-app.spec.ts
 import { test, expect } from '@playwright/test';
 
-test('trivia app loads correctly', async ({ page }) => {
+test('My app loads correctly', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText('Trivia App')).toBeVisible();
+  await expect(page.getByText('React App')).toBeVisible();
 });
 ```
 
