@@ -237,7 +237,7 @@ Add to `tsconfig.app.json`:
 
 This template includes all necessary dependencies:
 
-- **React 18** with TypeScript
+- **React 19** with TypeScript
 - **Vite** for fast development and building
 - **Vitest** + **React Testing Library** for unit testing
 - **Playwright** for E2E testing
