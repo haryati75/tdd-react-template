@@ -182,15 +182,22 @@ test("has title", async ({ page }) => {
 
 ## CI/CD Pipeline
 
-This template includes a complete GitHub Actions workflow with:
+This template includes a complete GitHub Actions workflow with optimized triggers:
 
 ### 1. Automated Testing (`all-tests.yml`)
 
-Runs on every push and pull request:
+Runs on every push and pull request to `main` branch, but **skips** when only these files change:
+
+- Documentation files (`*.md`)
+- VS Code configuration (`.vscode/`)
+- Configuration files (`.gitignore`)
+
+**Features:**
 
 - Unit tests with coverage
-- End-to-end tests across multiple browsers
+- End-to-end tests across multiple browsers (Chrome, Firefox, WebKit)
 - Test artifact uploads
+- Smart caching for dependencies and Playwright browsers
 
 ### 2. Automated Deployment (`deploy.yml`)
 
@@ -198,6 +205,13 @@ Deploys to GitHub Pages when:
 
 - Tests pass successfully
 - Changes are pushed to `main` branch
+- Manual deployment trigger (workflow_dispatch) for emergency deployments
+
+**Features:**
+
+- Automatic deployment after successful tests
+- Manual deployment option with reason tracking
+- Dependency caching for faster builds
 
 ## Setting Up GitHub Pages Deployment
 

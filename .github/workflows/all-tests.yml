@@ -2,8 +2,16 @@ name: Unit and e2e Tests
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "**.md"
+      - ".vscode/**"
+      - ".gitignore"
   pull_request:
     branches: [main]
+    paths-ignore:
+      - "**.md"
+      - ".vscode/**"
+      - ".gitignore"
 jobs:
   test:
     timeout-minutes: 60
