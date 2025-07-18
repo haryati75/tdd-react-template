@@ -12,11 +12,11 @@ function App() {
           count is {count}
         </button>
       </div>
-      {/* {
+      {
         count > 3 && (
           <p className="message">You've clicked the button more than 3 times!</p>
         )
-      } */}
+      }
     </>
   )
 }
