@@ -126,9 +126,9 @@ Deploys to GitHub Pages when:
 
 ### 1. Repository Settings
 1. Go to your repository **Settings** → **Pages**
-2. Set source to **Deploy from a branch**
-3. Select **gh-pages** branch
-4. Click **Save**
+2. Set source to **GitHub Actions** (recommended)
+   - OR set source to **Deploy from a branch** and select **gh-pages** (after first deployment)
+3. Click **Save**
 
 ### 2. Actions Permissions
 1. Go to **Settings** → **Actions** → **General**
