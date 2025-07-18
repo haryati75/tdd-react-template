@@ -1,164 +1,244 @@
-# TDD React Template
+# Learn Test-Driven Development (TDD) with React 🎯
 
-A complete React TypeScript template with comprehensive testing setup and automated deployment to GitHub Pages.
+A beginner-friendly React template designed for high school students to learn Test-Driven Development (TDD). This template comes with everything pre-configured so you can focus on learning React and TDD concepts!
 
-## Features
+> 🔧 **Need technical details?** Check out our [Technical Documentation](README-TECHNICAL.md) for advanced configuration and deployment info.
 
-- ⚛️ **React 19** with TypeScript
-- 🧪 **Vitest** for unit testing with coverage reports
-- 🎭 **Playwright** for end-to-end testing
-- 🚀 **GitHub Actions** CI/CD pipeline
-- 📦 **Automated deployment** to GitHub Pages
-- 🎯 **Test-driven development** ready
-- 🛠️ **VS Code integration** with debugging and task automation
-- 📊 **Interactive reports** for coverage and E2E tests
+## What You'll Learn 📚
 
-## Getting Started
+- 🧪 **Test-Driven Development (TDD)** - Write tests first, then code to make them pass
+- ⚛️ **React 19** - Build modern web applications
+- 🔍 **TypeScript** - Catch errors before they happen
+- 🎭 **End-to-End Testing** - Test your app like a real user would
+- 🚀 **Professional Workflow** - Use the same tools that real developers use
+- � **Code Coverage** - See how much of your code is tested
 
-### Using This Template
+## What is Test-Driven Development? 🤔
 
-1. **Create a new repository from this template**:
+TDD is a way of writing code where you:
 
-   - Click "Use this template" button on GitHub
-   - Or clone this repository:
+1. **Red** 🔴 - Write a test that fails (because the feature doesn't exist yet)
+2. **Green** 🟢 - Write just enough code to make the test pass
+3. **Refactor** 🔄 - Clean up your code while keeping tests green
+
+This helps you write better, more reliable code!
+
+## Prerequisites 📋
+
+Before you start, make sure you have:
+
+- **Computer** with Windows, Mac, or Linux
+- **Basic HTML/CSS knowledge** (you should know what divs, classes, and styling are)
+- **Basic JavaScript knowledge** (variables, functions, if statements)
+- **VS Code** installed ([download here](https://code.visualstudio.com/))
+- **Node.js** installed ([download here](https://nodejs.org/)) - choose the LTS version
+
+Don't worry if you're not an expert! This template is designed for beginners.
+
+## Getting Started 🚀
+
+### Setting Up Your Project
+
+1. **Get this template**:
+
+   - Click the green **"Use this template"** button at the top of this page
+   - Give your project a name (like "my-first-tdd-project")
+   - Click **"Create repository"**
+   - Then click the green **"Code"** button and copy the URL
+
+   Or download it directly:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/tdd-react-template.git my-new-project
-   cd my-new-project
+   git clone https://github.com/YOUR_USERNAME/your-project-name.git
+   cd your-project-name
    ```
 
-2. **Install dependencies**:
+2. **Install the project dependencies** (like downloading the tools you need):
 
    ```bash
    npm install
    ```
 
-3. **Install Playwright browsers** (first time only):
+   This might take a few minutes - don't worry, this is normal!
+
+3. **Install testing browsers** (one-time setup):
 
    ```bash
    npx playwright install --with-deps
    ```
 
-4. **Update project configuration**:
-   - Update `package.json` with your project name and details
-   - Update the `base` path in `vite.config.ts` to match your repository name (currently set to `/tdd-react-template/`):
-   ```typescript
-   export default defineConfig({
-     base: "/your-repo-name/", // Replace with your actual repo name
-     // ... rest of config
-   });
-   ```
+4. **Open your project in VS Code**:
+   - Open VS Code
+   - File → Open Folder → Choose your project folder
+   - VS Code might ask to install some extensions - click "Yes" to install them!
 
-### Running the Project
+### Your First Steps - Let's Run the App! 🎉
 
-#### Command Line
+#### Using VS Code (Recommended for Beginners)
 
-- **Development server**:
+1. **Start your development server**:
 
+   - Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac)
+   - Type "Tasks: Run Task"
+   - Choose **🚀 Start Dev Server**
+   - A browser should open showing your app at `http://localhost:5173`
+
+2. **Start your tests in watch mode** (they'll run automatically when you change code):
+   - Press `Ctrl+Shift+P` again
+   - Type "Tasks: Run Task"
+   - Choose **🧪 Test: Unit (Watch)**
+   - You'll see a terminal showing your test results
+
+Now you have your app running AND your tests watching for changes! 🎯
+
+#### Using Command Line (Alternative)
+
+If you prefer typing commands:
+
+- **See your app in the browser**:
   ```bash
   npm run dev
   ```
-
-- **Unit tests**:
-
+- **Run tests once**:
   ```bash
   npm test
   ```
+- **Run tests and keep watching for changes**:
 
-- **Unit tests with coverage**:
+  ```bash
+  npm test -- --watch
+  ```
 
+- **See how much of your code is tested**:
   ```bash
   npm run test:coverage
   ```
 
-- **End-to-end tests**:
+## Learning TDD with This Template 🎓
 
-  ```bash
-  npm run test:e2e
-  ```
+### Your Learning Journey
 
-- **View Playwright test report**:
+This template has everything set up so you can focus on learning. Here's what each part does:
 
-  ```bash
-  npm run test:e2e:report
-  ```
+**🧪 Unit Tests** - Test individual pieces of your code (like testing a single function)
+**🎭 E2E Tests** - Test your whole app like a user would (clicking buttons, filling forms)
+**� Coverage Reports** - Show you which parts of your code have tests
+**� VS Code Integration** - Makes testing super easy with buttons and shortcuts
 
-- **Build for production**:
+### Your First TDD Experience
 
-  ```bash
-  npm run build
-  ```
+Let's create a simple button component using TDD!
 
-- **Lint code**:
+1. **Write a failing test first** (Red 🔴):
 
-  ```bash
-  npm run lint
-  ```
+Create a new file `src/components/WelcomeButton.test.tsx`:
 
-- **Preview production build**:
-  ```bash
-  npm run preview
-  ```
+```typescript
+import { render, screen } from "@testing-library/react";
+import WelcomeButton from "./WelcomeButton";
 
-#### VS Code Integration
+describe("WelcomeButton", () => {
+  it("shows welcome message when clicked", () => {
+    render(<WelcomeButton />);
 
-This template includes comprehensive VS Code configuration for an enhanced development experience:
+    // This test will fail because WelcomeButton doesn't exist yet!
+    const button = screen.getByText("Click me!");
+    expect(button).toBeInTheDocument();
+  });
+});
+```
 
-**Quick Start:**
+2. **Run the test and watch it fail** - this is good! It means our test is working.
 
-1. Open the project in VS Code
-2. Press `Ctrl+Shift+P` → "Tasks: Run Task"
-3. Choose from organized tasks with visual icons
+3. **Write just enough code to make it pass** (Green 🟢):
 
-**Available Tasks:**
+Create `src/components/WelcomeButton.tsx`:
 
-- **🚀 Start Dev Server** - Launch React development server
-- **🔨 Build Production** - Build for production deployment
-- **🧪 Test: Unit (Watch)** - Run tests in watch mode (great for TDD)
-- **🧪 Test: Unit (Run Once)** - Run unit tests once and exit
-- **📊 Test: Unit with Coverage** - Generate and view coverage reports
-- **🎭 Test: E2E (Playwright)** - Run end-to-end tests
-- **🎭 Test: E2E with UI** - Run E2E tests with Playwright UI
-- **📊 View: Coverage Report** - Generate and open coverage reports
-- **📊 View: Coverage Report (Quick)** - Open existing coverage reports
-- **🎭 View: Playwright Report** - View E2E test reports with traces
-- **🧪 Test: All (Unit + E2E)** - Run complete test suite
-- **📊 Test: All with Reports** - Run everything and generate all reports
+```typescript
+export default function WelcomeButton() {
+  return <button>Click me!</button>;
+}
+```
 
-**Debugging:**
+4. **Watch your test turn green!** ✅
 
-- Press `Ctrl+Shift+D` to access Run and Debug
-- **🌐 Debug: React App (Chrome)** - Debug your React app with breakpoints
-- **🧪 Debug: Unit Tests** - Debug test files with breakpoints
-- **🧪 Debug: Current Test File** - Debug the currently open test file
+5. **Add more functionality with more tests**:
 
-## Testing Stack
+```typescript
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import WelcomeButton from "./WelcomeButton";
 
-### Unit Testing (Vitest + React Testing Library)
+describe("WelcomeButton", () => {
+  it("shows welcome message when clicked", async () => {
+    const user = userEvent.setup();
+    render(<WelcomeButton />);
 
-- **Vitest**: Fast unit test runner with hot reload
-- **React Testing Library**: Testing utilities for React components
-- **Istanbul**: Code coverage reporting
-- **jsdom**: Browser environment simulation
-- **Testing Location**: Test files are co-located with source files using `.test.tsx` extension
+    const button = screen.getByText("Click me!");
+    await user.click(button);
 
-### E2E Testing (Playwright)
+    expect(screen.getByText("Welcome to TDD!")).toBeInTheDocument();
+  });
+});
+```
 
-- **Playwright**: Cross-browser end-to-end testing
-- **Multi-browser support**: Chrome, Firefox, Safari (WebKit)
-- **Automatic screenshots and traces on failure**
-- **Test Location**: All E2E tests are in the `e2e/` directory
+6. **Make this new test pass by updating your component**:
 
-### Example Unit Test
+```typescript
+import { useState } from "react";
+
+export default function WelcomeButton() {
+  const [clicked, setClicked] = useState(false);
+
+  return (
+    <div>
+      <button onClick={() => setClicked(true)}>Click me!</button>
+      {clicked && <p>Welcome to TDD!</p>}
+    </div>
+  );
+}
+```
+
+Congratulations! 🎉 You just did Test-Driven Development!
+
+## Understanding the Tools 🔧
+
+### What's Included (Don't worry, it's all set up for you!)
+
+**Vitest** - Runs your unit tests super fast
+**React Testing Library** - Helps you test React components easily
+**Playwright** - Tests your app like a real user would
+**TypeScript** - Catches mistakes before you run your code
+**VS Code Tasks** - Click buttons instead of typing long commands
+
+### Cool VS Code Features You Can Use
+
+#### Quick Tasks (No need to remember commands!)
+
+- Press `Ctrl+Shift+P` → "Tasks: Run Task" and choose:
+  - **🚀 Start Dev Server** - See your app in the browser
+  - **🧪 Test: Unit (Watch)** - Tests run automatically as you code
+  - **📊 View: Coverage Report** - See what you've tested
+  - **🎭 Test: E2E (Playwright)** - Test like a real user
+
+#### Debugging (Finding and fixing bugs)
+
+- Press `Ctrl+Shift+D` for debugging tools
+- Set breakpoints by clicking next to line numbers
+- **🌐 Debug: React App** - Debug your app in the browser
+- **🧪 Debug: Unit Tests** - Debug your tests
+
+### Example Tests to Learn From
+
+#### Simple Component Test
 
 ```typescript
 // src/App.test.tsx
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import App from "./App";
 
-describe("App renders", () => {
-  it("the main heading", () => {
+describe("App", () => {
+  it("shows the main heading", () => {
     render(<App />);
     const heading = screen.getByText("Vite + ReactTS + Vitest + Playwright");
     expect(heading).toBeInTheDocument();
@@ -166,276 +246,177 @@ describe("App renders", () => {
 });
 ```
 
-### Example E2E Test
+#### User Interaction Test
 
 ```typescript
-// e2e/my-app.spec.ts
-import { test, expect } from "@playwright/test";
+// Testing button clicks
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-test("has title", async ({ page }) => {
-  await page.goto("/");
+describe("Counter Button", () => {
+  it("increases count when clicked", async () => {
+    const user = userEvent.setup();
+    render(<CounterButton />);
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/React TDD Template/);
+    const button = screen.getByRole("button", { name: /count is 0/i });
+    await user.click(button);
+
+    expect(screen.getByText("count is 1")).toBeInTheDocument();
+  });
 });
 ```
 
-## CI/CD Pipeline
+## Practice Projects to Try 💡
 
-This template includes a complete GitHub Actions workflow with optimized triggers:
+Once you're comfortable with the basics, try these projects to practice TDD:
 
-### 1. Automated Testing (`all-tests.yml`)
+### 1. **Todo List App** 📝
 
-Runs on every push and pull request to `main` branch, but **skips** when only these files change:
+Practice with:
 
-- Documentation files (`*.md`)
-- VS Code configuration (`.vscode/`)
-- Configuration files (`.gitignore`)
+- Adding new todos
+- Marking todos as complete
+- Deleting todos
+- Filtering (show all, completed, pending)
 
-**Features:**
+### 2. **Simple Calculator** 🧮
 
-- Unit tests with coverage
-- End-to-end tests across multiple browsers (Chrome, Firefox, WebKit)
-- Test artifact uploads
-- Smart caching for dependencies and Playwright browsers
+Practice with:
 
-### 2. Automated Deployment (`deploy.yml`)
+- Addition, subtraction, multiplication, division
+- Clear button
+- Display results
+- Handle edge cases (divide by zero)
 
-Deploys to GitHub Pages when:
+### 3. **Weather Display** 🌤️
 
-- Tests pass successfully
-- Changes are pushed to `main` branch
-- Manual deployment trigger (workflow_dispatch) for emergency deployments
+Practice with:
 
-**Features:**
+- Displaying current weather
+- Search by city
+- Show weather icons
+- Handle loading states
 
-- Automatic deployment after successful tests
-- Manual deployment option with reason tracking
-- Dependency caching for faster builds
+### 4. **Student Grade Tracker** 📊
 
-## Setting Up GitHub Pages Deployment
+Practice with:
 
-### 1. Repository Settings
+- Add subjects and grades
+- Calculate GPA
+- Show grade distribution
+- Filter by subject
 
-1. Go to your repository **Settings** → **Pages**
-2. Set source to **GitHub Actions** (recommended)
-   - OR set source to **Deploy from a branch** and select **gh-pages** (after first deployment)
-3. Click **Save**
+Start simple and add features one test at a time!
 
-### 2. Actions Permissions
+## Help & Support 🆘
 
-1. Go to **Settings** → **Actions** → **General**
-2. Under **Workflow permissions**, select **Read and write permissions**
-3. Check **Allow GitHub Actions to create and approve pull requests**
-4. Click **Save**
+### Common Beginner Issues
 
-### 3. Update Base Path
+**❌ "Tests are failing!"**
 
-Update `vite.config.ts` with your repository name:
+- ✅ This is normal! Read the error message carefully
+- ✅ Make sure your component exists where the test expects it
+- ✅ Check spelling and capitalization
 
-```typescript
-export default defineConfig({
-  base: "/your-repo-name/", // Important: Use your actual repository name
-  // ... rest of config
-});
-```
+**❌ "I don't see my changes in the browser"**
 
-### 4. Deploy
+- ✅ Make sure the dev server is running (`🚀 Start Dev Server`)
+- ✅ Check for error messages in the browser console (F12)
+- ✅ Try refreshing the page
 
-Push to the `main` branch and the workflow will:
+**❌ "VS Code looks different from the examples"**
 
-1. Run all tests
-2. Build the project
-3. Deploy to GitHub Pages
-4. Your app will be available at: `https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/`
+- ✅ Install the recommended extensions (VS Code will ask you)
+- ✅ Try reloading VS Code (`Ctrl+Shift+P` → "Reload Window")
 
-## Project Structure
+**❌ "I'm confused about TDD"**
 
-```
-your-project/
-├── .github/workflows/
-│   ├── all-tests.yml          # Test workflow
-│   └── deploy.yml             # Deployment workflow
-├── .vscode/                   # VS Code configuration
-│   ├── launch.json            # Debug configurations
-│   ├── tasks.json             # Task automation
-│   ├── settings.json          # Workspace settings
-│   └── extensions.json        # Recommended extensions
-├── src/
-│   ├── components/            # React components
-│   ├── App.test.tsx           # Unit tests
-│   ├── setupTests.ts          # Test configuration
-│   └── main.tsx
-├── e2e/                       # End-to-end tests
-├── coverage/                  # Coverage reports (generated)
-├── playwright-report/         # E2E test reports (generated)
-├── vite.config.ts             # Vite configuration
-├── playwright.config.ts       # Playwright configuration
-└── package.json
-```
-
-## Configuration Files
-
-### Vite Configuration (`vite.config.ts`)
-
-**Current configuration** (update the base path for your repo):
-
-```typescript
-/// <reference types="vitest" />
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-export default defineConfig({
-  plugins: [react()],
-  base: "/your-repo-name/", // Update this!
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.ts",
-    include: ["src/**/*.test.{ts,tsx}"],
-    coverage: {
-      provider: "istanbul",
-      include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/main.tsx"],
-    },
-  },
-});
-```
-
-## Development Workflow
-
-### Recommended TDD Workflow in VS Code
-
-1. **Start Development Environment**:
-
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🚀 Start Dev Server**
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🧪 Test: Unit (Watch)**
-
-2. **Test-Driven Development Cycle**:
-
-   - **Write a failing test** for your new feature
-   - **Watch the test fail** (red) in the watch mode terminal
-   - **Implement the feature** to make the test pass (green)
-   - **Refactor** code while keeping tests green
-   - **Debug if needed** using `Ctrl+Shift+D` → **🧪 Debug: Current Test File**
-
-3. **Check Coverage**:
-
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **📊 View: Coverage Report**
-   - Interactive HTML report opens in your browser
-
-4. **Run E2E Tests**:
-
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🎭 Test: E2E (Playwright)**
-   - View results: **🎭 View: Playwright Report**
-
-5. **Complete Testing**:
-
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **📊 Test: All with Reports**
-   - Runs everything and opens all reports
-
-6. **Commit and Deploy**:
-   - **Commit and push** to trigger CI/CD
-   - **Review** GitHub Actions results and live deployment
-
-### VS Code Features
-
-#### Integrated Testing
-
-- **Watch Mode**: Tests run automatically as you code
-- **Debugging**: Set breakpoints in both source and test files
-- **Coverage Visualization**: See exactly which lines need testing
-- **E2E Traces**: Visual replay of test failures
-
-#### Smart Development
-
-- **Auto-imports**: Automatic import suggestions
-- **TypeScript Integration**: Real-time type checking
-- **ESLint**: Code quality and formatting
-- **Hot Reload**: Instant preview of changes
-
-## Viewing Reports
-
-### VS Code Integration
-
-- **Coverage Reports**:
-  - Use task **📊 View: Coverage Report** to generate and open
-  - Or **📊 View: Coverage Report (Quick)** for existing reports
-  - Interactive HTML coverage report opens in browser
-- **Playwright Reports**:
-  - Use task **🎭 View: Playwright Report**
-  - View detailed test results, screenshots, and failure traces
-  - Interactive timeline and step-by-step debugging
-
-### Manual Access
-
-- **Coverage Report**: Open `coverage/index.html` after running `npm run test:coverage`
-- **Playwright Report**: Open `playwright-report/index.html` after running E2E tests
-- **GitHub Actions**: Check the Actions tab in your repository for CI results
-
-### Report Features
-
-- **Coverage**: Line-by-line coverage highlighting, branch coverage, function coverage
-- **E2E Reports**: Screenshots on failure, video recordings, network logs, step traces
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Deployment fails**: Check the base path in `vite.config.ts` matches your repo name
-2. **Tests fail in CI**: Ensure all dependencies are in `package.json`
-3. **GitHub Pages not working**: Verify repository settings and workflow permissions
-4. **VS Code tasks not working**: Ensure you have the recommended extensions installed
-5. **Coverage report not opening**: Run tests with coverage first, then view report
-6. **Debugging not working**: Make sure dev server is running before debugging React app
-
-### VS Code Setup Issues
-
-- **Missing extensions**: VS Code will prompt to install recommended extensions
-- **Tasks not visible**: Reload window (`Ctrl+Shift+P` → "Reload Window")
-- **Debug configurations not working**: Check that file paths in `launch.json` are correct
-- **Port conflicts**: Default ports are 5173 (dev), 8080 (coverage), 8081 (alt coverage)
+- ✅ Remember: Red (failing test) → Green (make it pass) → Refactor (clean up)
+- ✅ Start with very simple tests
+- ✅ It's okay to feel overwhelmed at first!
 
 ### Getting Help
 
-- Check the **Actions** tab for detailed error logs
-- Review the **Issues** section of this template repository
-- Ensure your repository has the correct permissions set up
-- Use VS Code's integrated terminal to see detailed error messages
+- 💬 Ask your teacher or classmates
+- 📖 Read error messages carefully - they usually tell you what's wrong
+- 🔍 Google the error message (this is what professional developers do!)
+- 📺 Watch YouTube tutorials on React Testing Library
+- 📚 Check out the [React Testing Library docs](https://testing-library.com/docs/react-testing-library/intro/)
+
+### Learning Resources
+
+- [React Official Tutorial](https://react.dev/learn)
+- [JavaScript.info](https://javascript.info/) - Great for JavaScript basics
+- [TypeScript for Beginners](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
+- [Test-Driven Development Explained](https://www.youtube.com/results?search_query=tdd+explained+beginners)
+
+## Advanced Features (For When You're Ready) 🚀
+
+Don't worry about these right away - focus on learning TDD first!
+
+> 📖 **Want all the technical details?** See our [Technical Documentation](README-TECHNICAL.md) for complete setup instructions, CI/CD configuration, and advanced workflows.
+
+### Sharing Your Project Online
+
+This template can automatically put your project on the internet using GitHub Pages:
+
+1. **Push your code to GitHub** (your teacher can help with this)
+2. **Go to Settings → Pages** in your GitHub repository
+3. **Select "GitHub Actions"** as the source
+4. **Your app will be live** at `https://YOUR_USERNAME.github.io/YOUR_PROJECT_NAME/`
+
+### Project Structure (What all these folders do)
+
+```
+your-project/
+├── src/                    # Your React code goes here
+│   ├── components/         # Reusable components (buttons, etc.)
+│   ├── App.tsx            # Main app component
+│   ├── App.test.tsx       # Tests for the main app
+│   └── main.tsx           # Starting point for your app
+├── e2e/                   # End-to-end tests (test the whole app)
+├── coverage/              # Reports showing what you've tested
+├── .vscode/               # VS Code settings (makes coding easier)
+└── package.json           # List of tools your project uses
+```
+
+### More Commands (When You Need Them)
+
+```bash
+npm run build          # Package your app for sharing
+npm run lint           # Check your code style
+npm run preview        # Preview your built app
+npm run test:e2e       # Test your app like a user
+```
+
+## Ready to Start Learning? 🎯
+
+### Your Quick Start Checklist
+
+- [ ] ✅ Install VS Code and Node.js
+- [ ] 📥 Get this template (click "Use this template")
+- [ ] 📦 Run `npm install` in your project folder
+- [ ] 🎭 Run `npx playwright install --with-deps`
+- [ ] 🚀 Open project in VS Code and start dev server
+- [ ] 🧪 Start tests in watch mode
+- [ ] 📝 Try the WelcomeButton example above
+- [ ] 🎉 Celebrate your first TDD experience!
+
+### Remember: Learning TDD Takes Time
+
+- 🐌 **Start slow** - It's normal to feel confused at first
+- 🔄 **Practice the cycle** - Red → Green → Refactor
+- 🤝 **Ask for help** - Teachers, classmates, and Google are your friends
+- 🎯 **Focus on simple tests first** - Complex stuff comes later
+- 🏆 **Celebrate small wins** - Every passing test is progress!
+
+**Good luck on your TDD journey!** 🚀 You're learning skills that professional developers use every day.
 
 ---
 
-## Dependencies
+## More Resources
 
-This template includes all necessary dependencies:
-
-- **React 19** with TypeScript
-- **Vite** for fast development and building
-- **Vitest** + **React Testing Library** for unit testing
-- **Playwright** for E2E testing
-- **Istanbul** for coverage reporting
-- **http-server** for serving reports locally
-
-### VS Code Extensions (Auto-recommended)
-
-- **TypeScript** - Enhanced TypeScript support
-- **ESLint** - Code linting and formatting
-- **Prettier** - Code formatting
-- **Playwright** - E2E testing support
-- **Vitest Explorer** - Visual test running and debugging
-- **Test Explorer** - Additional test management
-- **Vite** - Enhanced Vite development experience
-- **React Snippets** - Helpful React code snippets
-- **Tailwind CSS** - CSS framework support (if using Tailwind)
-
-You're ready to start building with test-driven development in VS Code! 🚀
-
-### Quick Start Checklist
-
-- [ ] Clone the template
-- [ ] Run `npm install`
-- [ ] Open in VS Code
-- [ ] Install recommended extensions (VS Code will prompt)
-- [ ] Start dev server: `Ctrl+Shift+P` → **🚀 Start Dev Server**
-- [ ] Start tests: `Ctrl+Shift+P` → **🧪 Test: Unit (Watch)**
-- [ ] Write your first test and make it pass! 🎯
+- 📖 **[Technical Documentation](README-TECHNICAL.md)** - Complete setup guide, CI/CD, and advanced features
+- 🎯 **[React Testing Library Cheatsheet](https://testing-library.com/docs/react-testing-library/cheatsheet/)**
+- 🧪 **[Vitest Documentation](https://vitest.dev/)**
+- 🎭 **[Playwright Documentation](https://playwright.dev/)**
