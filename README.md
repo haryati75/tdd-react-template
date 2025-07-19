@@ -49,7 +49,7 @@ Don't worry if you're not an expert! This template is designed for beginners.
    Or download it directly:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/your-project-name.git
+   git clone https://github.com/haryati75/tdd-react-template your-project-name
    cd your-project-name
    ```
 

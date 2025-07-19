@@ -25,7 +25,7 @@ A complete React TypeScript template with comprehensive testing setup and automa
    - Or clone this repository:
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/tdd-react-template.git my-new-project
+   git clone https://github.com/haryati75/tdd-react-template my-new-project
    cd my-new-project
    ```
 
