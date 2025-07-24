@@ -13,7 +13,7 @@
     "vitest.explorer",
     
     // Build Tools & Development
-    "antfu.vite",
+    // "antfu.vite",
     "bradlc.vscode-tailwindcss",
     
     // Utilities
