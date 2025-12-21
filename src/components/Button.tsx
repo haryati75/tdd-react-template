@@ -1,6 +1,11 @@
-export default function Button({ text }: { text: string }) {
+interface ButtonProps {
+  text: string
+  onClick?: () => void
+}
+
+export default function Button({ text, onClick }: ButtonProps) {
   return (
-    <button>
+    <button onClick={onClick} className="btn">
       {text}
     </button>
   )

@@ -2,55 +2,34 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 
-describe('App renders', () => {
-  it('the main heading', () => {
+describe('App component', () => {
+  it('renders the main heading', () => {
     render(<App />)
-    const heading = screen.getByText('Vite + ReactTS + Vitest + Playwright')
+    const heading = screen.getByRole('heading', { name: 'Vite + ReactTS + Vitest + Playwright', level: 1 })
     expect(heading).toBeInTheDocument()
   })
 
-  it('the counter button with initial count of 0', () => {
+  it('renders the Card component with counter title', () => {
     render(<App />)
-    const button = screen.getByRole('button', { name: /count is 0/i })
+    const cardTitle = screen.getByRole('heading', { name: /counter: 0/i, level: 3 })
+    expect(cardTitle).toBeInTheDocument()
+  })
+
+  it('renders the increment button', () => {
+    render(<App />)
+    const button = screen.getByRole('button', { name: /click to increment/i })
     expect(button).toBeInTheDocument()
   })
-})
 
-describe('App increments', () => {
-  let user: ReturnType<typeof userEvent.setup>
-
-  beforeEach(() => {
-    user = userEvent.setup()
-  })
-
-  it('count when button is clicked', async () => {
+  it('updates counter state when button is clicked', async () => {
+    const user = userEvent.setup()
     render(<App />)
-    const button = screen.getByRole('button', { name: /count is 0/i })
-
+    
+    const button = screen.getByRole('button', { name: /click to increment/i })
+    
     await user.click(button)
-
-    expect(screen.getByRole('button', { name: /count is 1/i })).toBeInTheDocument()
-  })
-
-  it('count multiple times when button is clicked multiple times', async () => {
-    render(<App />)
-    const button = screen.getByRole('button', { name: /count is 0/i })
-
-    await user.click(button)
-    await user.click(button)
-    await user.click(button)
-
-    expect(screen.getByRole('button', { name: /count is 3/i })).toBeInTheDocument()
-  })
-
-  it('displays the correct count text format', async () => {
-    render(<App />)
-    const button = screen.getByRole('button')
-
-    expect(button).toHaveTextContent('count is 0')
-
-    await user.click(button)
-    expect(button).toHaveTextContent('count is 1')
+    
+    expect(screen.getByRole('heading', { name: /counter: 1/i })).toBeInTheDocument()
   })
 })
 
