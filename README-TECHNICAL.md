@@ -159,10 +159,13 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 
-describe("App renders", () => {
-  it("the main heading", () => {
+describe("App component", () => {
+  it("renders the main heading", () => {
     render(<App />);
-    const heading = screen.getByText("Vite + ReactTS + Vitest + Playwright");
+    const heading = screen.getByRole("heading", {
+      name: "ReactTS Project Template",
+      level: 1,
+    });
     expect(heading).toBeInTheDocument();
   });
 });
@@ -304,7 +307,7 @@ your-project/
 
 ```typescript
 /// <reference types="vitest" />
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config"; // ensures `test` config is typed
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({

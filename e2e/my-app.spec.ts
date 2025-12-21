@@ -11,9 +11,7 @@ test.describe("React TDD Template App", () => {
     await page.goto("/");
 
     await expect(
-      page.getByRole("heading", {
-        name: "Vite + ReactTS + Vitest + Playwright",
-      })
+      page.getByRole("heading", { name: "ReactTS Project Template" })
     ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: /counter: 0/i })

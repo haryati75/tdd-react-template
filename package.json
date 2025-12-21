@@ -3,6 +3,23 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "A modern React template with TDD best practices, featuring Vite, TypeScript, Vitest for unit testing, and Playwright for E2E testing.",
+  "keywords": [
+    "react",
+    "vite",
+    "typescript",
+    "vitest",
+    "playwright",
+    "tdd",
+    "testing",
+    "e2e",
+    "template"
+  ],
+  "author": "Haryati H <haryati75@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haryati75/tdd-react-template.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

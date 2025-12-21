@@ -11,7 +11,7 @@ A beginner-friendly React template designed for high school students to learn Te
 - 🔍 **TypeScript** - Catch errors before they happen
 - 🎭 **End-to-End Testing** - Test your app like a real user would
 - 🚀 **Professional Workflow** - Use the same tools that real developers use
-- � **Code Coverage** - See how much of your code is tested
+- 📊 **Code Coverage** - See how much of your code is tested
 
 ## What is Test-Driven Development? 🤔
 
@@ -122,8 +122,8 @@ This template has everything set up so you can focus on learning. Here's what ea
 
 **🧪 Unit Tests** - Test individual pieces of your code (like testing a single function)
 **🎭 E2E Tests** - Test your whole app like a user would (clicking buttons, filling forms)
-**� Coverage Reports** - Show you which parts of your code have tests
-**� VS Code Integration** - Makes testing super easy with buttons and shortcuts
+**📊 Coverage Reports** - Show you which parts of your code have tests
+**🧰 VS Code Integration** - Makes testing super easy with buttons and shortcuts
 
 ### Your First TDD Experience
 
@@ -240,7 +240,10 @@ import App from "./App";
 describe("App", () => {
   it("shows the main heading", () => {
     render(<App />);
-    const heading = screen.getByText("Vite + ReactTS + Vitest + Playwright");
+    const heading = screen.getByRole("heading", {
+      name: "ReactTS Project Template",
+      level: 1,
+    });
     expect(heading).toBeInTheDocument();
   });
 });
@@ -252,16 +255,19 @@ describe("App", () => {
 // Testing button clicks
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import App from "./App";
 
 describe("Counter Button", () => {
-  it("increases count when clicked", async () => {
+  it("increments counter when clicked", async () => {
     const user = userEvent.setup();
-    render(<CounterButton />);
+    render(<App />);
 
-    const button = screen.getByRole("button", { name: /count is 0/i });
+    const button = screen.getByRole("button", { name: /click to increment/i });
     await user.click(button);
 
-    expect(screen.getByText("count is 1")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /counter: 1/i })
+    ).toBeInTheDocument();
   });
 });
 ```
@@ -420,3 +426,14 @@ npm run test:e2e       # Test your app like a user
 - 🎯 **[React Testing Library Cheatsheet](https://testing-library.com/docs/react-testing-library/cheatsheet/)**
 - 🧪 **[Vitest Documentation](https://vitest.dev/)**
 - 🎭 **[Playwright Documentation](https://playwright.dev/)**
+
+### Learn TDD (Beginner‑friendly)
+
+- Martin Fowler — What is TDD: https://martinfowler.com/bliki/TestDrivenDevelopment.html
+- Testing Library — Guiding Principles: https://testing-library.com/docs/guiding-principles/
+- Vitest — Getting Started: https://vitest.dev/guide/
+- Playwright — Intro: https://playwright.dev/docs/intro
+
+## Footer & License
+
+This template includes a footer with links to the GitHub repo, author, and documentation for the tools used. The project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.

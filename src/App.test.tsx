@@ -5,7 +5,7 @@ import App from './App'
 describe('App component', () => {
   it('renders the main heading', () => {
     render(<App />)
-    const heading = screen.getByRole('heading', { name: 'Vite + ReactTS + Vitest + Playwright', level: 1 })
+    const heading = screen.getByRole('heading', { name: 'ReactTS Project Template', level: 1 })
     expect(heading).toBeInTheDocument()
   })
 
