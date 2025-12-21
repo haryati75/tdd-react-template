@@ -13,7 +13,8 @@ describe('App component', () => {
       
       // Card and Button components
       expect(screen.getByRole('heading', { name: /counter: 0/i, level: 3 })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: /click to increment/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /increment/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /reset/i })).toBeInTheDocument()
       
       // Footer component
       expect(screen.getByRole('link', { name: 'GitHub Repo' })).toBeInTheDocument()
@@ -26,7 +27,7 @@ describe('App component', () => {
       const user = userEvent.setup()
       render(<App />)
       
-      const button = screen.getByRole('button', { name: /click to increment/i })
+      const button = screen.getByRole('button', { name: /increment/i })
       
       await user.click(button)
       
@@ -37,7 +38,7 @@ describe('App component', () => {
       const user = userEvent.setup()
       render(<App />)
       
-      const button = screen.getByRole('button', { name: /click to increment/i })
+      const button = screen.getByRole('button', { name: /increment/i })
       
       await user.click(button)
       await user.click(button)
@@ -53,6 +54,47 @@ describe('App component', () => {
       unmount()
       
       render(<App />)
+      expect(screen.getByRole('heading', { name: /counter: 0/i })).toBeInTheDocument()
+    })
+
+    it('resets counter to 0 when reset button is clicked', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      
+      const incrementBtn = screen.getByRole('button', { name: /increment/i })
+      const resetBtn = screen.getByRole('button', { name: /reset/i })
+      
+      // Increment multiple times
+      await user.click(incrementBtn)
+      await user.click(incrementBtn)
+      await user.click(incrementBtn)
+      expect(screen.getByRole('heading', { name: /counter: 3/i })).toBeInTheDocument()
+      
+      // Reset
+      await user.click(resetBtn)
+      expect(screen.getByRole('heading', { name: /counter: 0/i })).toBeInTheDocument()
+    })
+
+    it('reset button works after multiple increment and reset cycles', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      
+      const incrementBtn = screen.getByRole('button', { name: /increment/i })
+      const resetBtn = screen.getByRole('button', { name: /reset/i })
+      
+      // First cycle: increment to 2, then reset
+      await user.click(incrementBtn)
+      await user.click(incrementBtn)
+      expect(screen.getByRole('heading', { name: /counter: 2/i })).toBeInTheDocument()
+      
+      await user.click(resetBtn)
+      expect(screen.getByRole('heading', { name: /counter: 0/i })).toBeInTheDocument()
+      
+      // Second cycle: increment to 1, then reset
+      await user.click(incrementBtn)
+      expect(screen.getByRole('heading', { name: /counter: 1/i })).toBeInTheDocument()
+      
+      await user.click(resetBtn)
       expect(screen.getByRole('heading', { name: /counter: 0/i })).toBeInTheDocument()
     })
   })

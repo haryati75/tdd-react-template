@@ -5,7 +5,7 @@ import Button from './Button'
 
 describe('Button renders', () => {
   it('with initial text', () => {
-    render(<Button text="any text" />)
+    render(<Button>any text</Button>)
     const button = screen.getByRole('button', { name: /any text/i })
     expect(button).toBeInTheDocument()
   })
@@ -16,7 +16,7 @@ describe('Button onClick', () => {
     const handleClick = vi.fn()
     const user = userEvent.setup()
     
-    render(<Button text="Click me" onClick={handleClick} />)
+    render(<Button onClick={handleClick}>Click me</Button>)
     const button = screen.getByRole('button', { name: /click me/i })
     
     await user.click(button)
@@ -28,7 +28,7 @@ describe('Button onClick', () => {
     const handleClick = vi.fn()
     const user = userEvent.setup()
     
-    render(<Button text="Click me" onClick={handleClick} />)
+    render(<Button onClick={handleClick}>Click me</Button>)
     const button = screen.getByRole('button', { name: /click me/i })
     
     await user.click(button)

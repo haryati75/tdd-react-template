@@ -8,15 +8,20 @@ import Footer from './components/Footer'
 function App() {
   const [count, setCount] = useState(0)
 
-  const buttonClickHandler = () => {
+  const incrementHandler = () => {
     setCount(count + 1)
+  }
+
+  const resetHandler = () => {
+    setCount(0)
   }
 
   return (
     <>
       <Header />
       <Card title={`Counter: ${count}`}>
-        <Button text="Click to increment" onClick={buttonClickHandler} />
+        <Button onClick={incrementHandler}>Increment</Button>
+        <Button onClick={resetHandler}>Reset</Button>
       </Card>
       <Footer />
     </>

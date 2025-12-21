@@ -1,3 +1,5 @@
+import ExternalLink from './ExternalLink'
+
 export default function Header() {
   return (
     <header>
@@ -8,13 +10,13 @@ export default function Header() {
       </p>
       <p>
         Learn TDD:{' '} 
-        <a href="https://martinfowler.com/bliki/TestDrivenDevelopment.html" target="_blank" rel="noopener noreferrer">Martin Fowler</a>
+        <ExternalLink href="https://martinfowler.com/bliki/TestDrivenDevelopment.html">Martin Fowler</ExternalLink>
         {' '}·{' '}
-        <a href="https://testing-library.com/docs/guiding-principles/" target="_blank" rel="noopener noreferrer">RTL Principles</a>
+        <ExternalLink href="https://testing-library.com/docs/guiding-principles/">RTL Principles</ExternalLink>
         {' '}·{' '}
-        <a href="https://vitest.dev/guide/" target="_blank" rel="noopener noreferrer">Vitest Guide</a>
+        <ExternalLink href="https://vitest.dev/guide/">Vitest Guide</ExternalLink>
         {' '}·{' '}
-        <a href="https://playwright.dev/docs/intro" target="_blank" rel="noopener noreferrer">Playwright Intro</a>
+        <ExternalLink href="https://playwright.dev/docs/intro">Playwright Intro</ExternalLink>
       </p>
     </header>
   )
