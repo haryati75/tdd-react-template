@@ -2,6 +2,8 @@
 
 A complete React TypeScript template with comprehensive testing setup and automated deployment to GitHub Pages.
 
+Deployed to: [https://haryati75.github.io/tdd-react-template/](https://haryati75.github.io/tdd-react-template/)
+
 > 📚 **New to TDD or React?** Check out our [Beginner-Friendly Guide](README.md) first!
 
 ## Features
