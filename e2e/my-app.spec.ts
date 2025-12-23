@@ -4,7 +4,7 @@ test.describe("React TDD Template App", () => {
   test("has correct page title", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page).toHaveTitle(/React TDD Template/);
+    await expect(page).toHaveTitle(/ReactTS App/);
   });
 
   test("displays initial counter state", async ({ page }) => {

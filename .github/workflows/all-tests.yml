@@ -1,13 +1,13 @@
 name: Unit and e2e Tests
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
     paths-ignore:
       - "**.md"
       - ".vscode/**"
       - ".gitignore"
   pull_request:
-    branches: [main]
+    branches: [main, dev]
     paths-ignore:
       - "**.md"
       - ".vscode/**"
