@@ -1,0 +1,85 @@
+name: Auto-merge main to dev
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge main into dev
+        id: merge
+        continue-on-error: true
+        run: |
+          git fetch origin dev:dev
+          git checkout dev
+          git merge --no-ff origin/main -m "Auto-merge main into dev"
+
+      - name: Push changes
+        if: steps.merge.outcome == 'success'
+        run: |
+          git push origin dev
+
+      - name: Create issue on conflict
+        if: steps.merge.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔀 Auto-merge conflict: main → dev',
+              body: `## Auto-merge Failed
+            
+            The automatic merge from \`main\` to \`dev\` encountered conflicts and requires manual resolution.
+            
+            ### Details
+            - **Workflow:** ${context.workflow}
+            - **Run ID:** ${context.runId}
+            - **Commit SHA:** ${context.sha}
+            - **Triggered by:** ${context.actor}
+            
+            ### Manual Resolution Steps
+            
+            1. Pull the latest changes:
+               \`\`\`bash
+               git fetch origin
+               git checkout dev
+               git pull origin dev
+               \`\`\`
+            
+            2. Merge main into dev:
+               \`\`\`bash
+               git merge origin/main
+               \`\`\`
+            
+            3. Resolve any conflicts in your editor
+            
+            4. Complete the merge:
+               \`\`\`bash
+               git add .
+               git commit
+               git push origin dev
+               \`\`\`
+            
+            5. Close this issue once resolved
+            
+            ### Resources
+            - [GitHub Docs: Resolving Merge Conflicts](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line)
+            - [Workflow Run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+              labels: ['merge-conflict', 'automated']
+            });
+            console.log(`Created issue #${issue.data.number}`);
