@@ -452,6 +452,33 @@ This template includes all necessary dependencies:
 - **Releases/tags**: `vX.Y.Z` using semantic versioning.
 - **Merge policy**: Prefer squash merges for features/fixes to keep history tidy; ensure `dev` is up to date before merging to `main`.
 
+### Branch Protection Strategy
+
+**`main` and `dev` are protected branches**—direct pushes are blocked at both the client and server level.
+
+**Server-side (GitHub):**
+
+- ✅ Require pull requests before merging
+- ✅ Require status checks to pass (all-tests.yml)
+- ✅ Require branches to be up to date
+- ✅ Require code reviews (1+ approvals)
+
+**Client-side (Husky pre-push hook):**
+
+- Runs automatically before each push
+- Prevents direct pushes to `main` or `dev` locally
+- See [.husky/pre-push](.husky/pre-push) for the hook implementation
+
+**Workflow:**
+
+1. Always create a feature/fix/docs branch from `dev`
+2. Push to your branch (not `main` or `dev`)
+3. Create a PR with required review
+4. GitHub Actions tests must pass
+5. Merge via GitHub UI (not command line)
+
+This layered approach (Husky + GitHub) ensures no direct commits slip through.
+
 ### Pull Request Guidelines
 
 - **Title format**: `type(scope): summary`
