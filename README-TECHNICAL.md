@@ -6,8 +6,6 @@ A complete React TypeScript template with comprehensive testing setup and automa
 
 Deployed to: [https://haryati75.github.io/tdd-react-template/](https://haryati75.github.io/tdd-react-template/)
 
-> 📚 **New to TDD or React?** Check out our [Beginner-Friendly Guide](README.md) first!
-
 ## Features
 
 - ⚛️ **React 19** with TypeScript
@@ -152,6 +150,70 @@ Deploys to GitHub Pages when:
 - Manual deployment option with reason tracking
 - Dependency caching for faster builds
 
+### 3. Auto-sync Workflow (`auto-merge-main-to-dev.yml`)
+
+Automatically syncs `dev` with `main` after every push to `main`:
+
+- **Trigger**: Push to `main` branch (automatic)
+- **Behavior**: Creates a sync PR from `main` into `dev`, auto-merges if clean, creates issue + PR on conflicts
+- **Purpose**: Keeps `dev` aligned with releases without manual intervention
+- **See**: [Maintainer Guide → Auto-sync: main → dev (Workflow)](README-TECHNICAL.md#auto-sync-main--dev-workflow) for detailed guidance
+
+### Workflow Overview & Data Flow
+
+The three workflows form a complete CI/CD loop:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Feature/Fix Branch (feat/*, fix/*, docs/*, chore/*)           │
+└────────────────────┬────────────────────────────────────────────┘
+                     │
+                     ▼ Create PR targeting `dev`
+┌─────────────────────────────────────────────────────────────────┐
+│  ✓ Tests pass (all-tests.yml)                                   │
+│  ✓ Coverage & E2E across Chrome, Firefox, Safari                │
+│  ✓ Required review approval                                      │
+└────────────────────┬────────────────────────────────────────────┘
+                     │
+                     ▼ Squash merge into `dev`
+┌─────────────────────────────────────────────────────────────────┐
+│  `dev` Integration Branch (stable, tested)                       │
+│  (Ready for next release cycle)                                  │
+└────────────────────┬────────────────────────────────────────────┘
+                     │
+                     ▼ Create PR targeting `main` (release)
+┌─────────────────────────────────────────────────────────────────┐
+│  ✓ Tests pass (all-tests.yml again)                             │
+│  ✓ Coverage & E2E validated                                      │
+│  ✓ Review & merge to `main`                                      │
+└────────────────────┬────────────────────────────────────────────┘
+                     │
+                     ▼ Merge into `main` (automatic)
+┌─────────────────────────────────────────────────────────────────┐
+│  1️⃣  all-tests.yml: Unit & E2E tests (automatic)                 │
+│  2️⃣  deploy.yml: Build & deploy to GitHub Pages (automatic)     │
+│  3️⃣  auto-merge-main-to-dev.yml: Sync `dev` (automatic)          │
+└────────────────────┬────────────────────────────────────────────┘
+                     │
+                     ▼ Auto-sync keeps `dev` aligned
+┌─────────────────────────────────────────────────────────────────┐
+│  `dev` Updated with `main` (ready for next feature cycle)       │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Key Points:**
+
+- **Pull requests**: All changes flow through PRs (never direct pushes to `main` or `dev`).
+- **Tests on every PR**: Both `dev` and `main` PRs run the full test suite.
+- **Auto-sync**: After `main` is updated, workflows automatically sync changes back to `dev` for the next cycle.
+- **Manual triggers**: Deploy workflow can be triggered manually in GitHub Actions for emergencies.
+
+**Next Steps:**
+
+- Setup: See [Setting Up GitHub Pages Deployment](README-TECHNICAL.md#setting-up-github-pages-deployment)
+- Troubleshooting: See [CI/CD Issues](README-TECHNICAL.md#cicd-issues)
+- Developer workflow: See [Maintainer Guide](README-TECHNICAL.md#maintainer-guide)
+
 ## Setting Up GitHub Pages Deployment
 
 ### 1. Repository Settings
@@ -181,12 +243,14 @@ export default defineConfig({
 
 ### 4. Deploy
 
-Push to the `main` branch and the workflow will:
+Merge a PR into `main` and the workflow will:
 
 1. Run all tests
 2. Build the project
 3. Deploy to GitHub Pages
 4. Your app will be available at: `https://YOUR_USERNAME.github.io/YOUR_REPO_NAME/`
+
+Note: `main` is protected — avoid direct pushes. Use PRs with approvals. After deployment, the auto-sync workflow keeps `dev` aligned with `main`. See [./.github/workflows/auto-merge-main-to-dev.yml](.github/workflows/auto-merge-main-to-dev.yml) and [README-TECHNICAL.md](README-TECHNICAL.md).
 
 ### 5. Manual Deployment (Optional)
 
@@ -212,25 +276,38 @@ This manual trigger is useful for:
 ```
 your-project/
 ├── .github/workflows/
-│   ├── all-tests.yml          # Test workflow
-│   └── deploy.yml             # Deployment workflow
-├── .vscode/                   # VS Code configuration
-│   ├── launch.json            # Debug configurations
-│   ├── tasks.json             # Task automation
-│   ├── settings.json          # Workspace settings
-│   └── extensions.json        # Recommended extensions
+│   ├── all-tests.yml                  # Test workflow (unit + E2E on PR/push to main)
+│   ├── deploy.yml                     # Deployment workflow (build & deploy to GitHub Pages)
+│   └── auto-merge-main-to-dev.yml     # Auto-sync workflow (sync main → dev)
+├── .vscode/                           # VS Code configuration
+│   ├── launch.json                    # Debug configurations
+│   ├── tasks.json                     # Task automation (dev, test, build, etc.)
+│   ├── settings.json                  # Workspace settings
+│   └── extensions.json                # Recommended extensions
 ├── src/
-│   ├── components/            # React components
-│   ├── App.test.tsx           # Unit tests
-│   ├── setupTests.ts          # Test configuration
-│   └── main.tsx
-├── e2e/                       # End-to-end tests
-├── coverage/                  # Coverage reports (generated)
-├── playwright-report/         # E2E test reports (generated)
-├── vite.config.ts             # Vite configuration
-├── playwright.config.ts       # Playwright configuration
-└── package.json
+│   ├── components/                    # React components
+│   ├── App.test.tsx                   # Unit tests (example)
+│   ├── setupTests.ts                  # Test configuration
+│   └── main.tsx                       # React app entry point
+├── e2e/                               # End-to-end tests (Playwright)
+├── coverage/                          # Coverage reports (generated)
+├── playwright-report/                 # E2E test reports (generated)
+├── vite.config.ts                     # Vite configuration (build, test, base path)
+├── playwright.config.ts               # Playwright configuration
+├── tsconfig.json                      # TypeScript configuration (root)
+├── tsconfig.app.json                  # TypeScript configuration (app)
+├── tsconfig.node.json                 # TypeScript configuration (build tools)
+├── eslint.config.js                   # ESLint configuration
+├── package.json                       # Dependencies & scripts
+└── README.md                          # Beginner-friendly guide
 ```
+
+**Key files for maintainers:**
+
+- `.github/workflows/`: All three CI/CD workflows. See [Workflow Overview & Data Flow](README-TECHNICAL.md#workflow-overview--data-flow).
+- `vite.config.ts`: Update `base` path to your repo name.
+- `package.json`: Add your project metadata; all dependencies pre-configured.
+- `tsconfig.app.json`: Includes Vitest globals; no additional setup needed.
 
 ## Configuration Files
 
