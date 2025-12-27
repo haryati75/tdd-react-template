@@ -1,5 +1,7 @@
 # TDD React Template - Technical Documentation
 
+> Audience: Template maintainers and developers. For beginner-friendly learning and TDD tutorials, see [README.md](README.md).
+
 A complete React TypeScript template with comprehensive testing setup and automated deployment to GitHub Pages.
 
 Deployed to: [https://haryati75.github.io/tdd-react-template/](https://haryati75.github.io/tdd-react-template/)
@@ -17,41 +19,27 @@ Deployed to: [https://haryati75.github.io/tdd-react-template/](https://haryati75
 - 🛠️ **VS Code integration** with debugging and task automation
 - 📊 **Interactive reports** for coverage and E2E tests
 
-## Quick Start
+## Quick Start (Maintainers)
 
-### Using This Template
+For learner onboarding and TDD tutorial, use [README.md](README.md). Maintainers can set up quickly:
 
-1. **Create a new repository from this template**:
+1. Clone or use GitHub “Use this template”.
+2. Install dependencies:
 
-   - Click "Use this template" button on GitHub
-   - Or clone this repository:
+```bash
+npm install
+```
 
-   ```bash
-   git clone https://github.com/haryati75/tdd-react-template my-new-project
-   cd my-new-project
-   ```
+3. Install Playwright browsers (first time only):
 
-2. **Install dependencies**:
+```bash
+npx playwright install --with-deps
+```
 
-   ```bash
-   npm install
-   ```
+4. Update configuration:
 
-3. **Install Playwright browsers** (first time only):
-
-   ```bash
-   npx playwright install --with-deps
-   ```
-
-4. **Update project configuration**:
-   - Update `package.json` with your project name and details
-   - Update the `base` path in `vite.config.ts` to match your repository name (currently set to `/tdd-react-template/`):
-   ```typescript
-   export default defineConfig({
-     base: "/your-repo-name/", // Replace with your actual repo name
-     // ... rest of config
-   });
-   ```
+- Update `package.json` metadata
+- Set `base` in `vite.config.ts` to your repo name
 
 ### Running the Project
 
@@ -106,35 +94,7 @@ Deployed to: [https://haryati75.github.io/tdd-react-template/](https://haryati75
 
 #### VS Code Integration
 
-This template includes comprehensive VS Code configuration for an enhanced development experience:
-
-**Quick Start:**
-
-1. Open the project in VS Code
-2. Press `Ctrl+Shift+P` → "Tasks: Run Task"
-3. Choose from organized tasks with visual icons
-
-**Available Tasks:**
-
-- **🚀 Start Dev Server** - Launch React development server
-- **🔨 Build Production** - Build for production deployment
-- **🧪 Test: Unit (Watch)** - Run tests in watch mode (great for TDD)
-- **🧪 Test: Unit (Run Once)** - Run unit tests once and exit
-- **📊 Test: Unit with Coverage** - Generate and view coverage reports
-- **🎭 Test: E2E (Playwright)** - Run end-to-end tests
-- **🎭 Test: E2E with UI** - Run E2E tests with Playwright UI
-- **📊 View: Coverage Report** - Generate and open coverage reports
-- **📊 View: Coverage Report (Quick)** - Open existing coverage reports
-- **🎭 View: Playwright Report** - View E2E test reports with traces
-- **🧪 Test: All (Unit + E2E)** - Run complete test suite
-- **📊 Test: All with Reports** - Run everything and generate all reports
-
-**Debugging:**
-
-- Press `Ctrl+Shift+D` to access Run and Debug
-- **🌐 Debug: React App (Chrome)** - Debug your React app with breakpoints
-- **🧪 Debug: Unit Tests** - Debug test files with breakpoints
-- **🧪 Debug: Current Test File** - Debug the currently open test file
+Full task catalogue and debugging configurations are available via VS Code tasks. Beginners should use the curated tasks in [README.md](README.md); maintainers can use the complete list configured in `.vscode`.
 
 ## Testing Stack
 
@@ -153,39 +113,10 @@ This template includes comprehensive VS Code configuration for an enhanced devel
 - **Automatic screenshots and traces on failure**
 - **Test Location**: All E2E tests are in the `e2e/` directory
 
-### Example Unit Test
+### Example Tests
 
-```typescript
-// src/App.test.tsx
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import App from "./App";
-
-describe("App component", () => {
-  it("renders the main heading", () => {
-    render(<App />);
-    const heading = screen.getByRole("heading", {
-      name: "ReactTS Project Template",
-      level: 1,
-    });
-    expect(heading).toBeInTheDocument();
-  });
-});
-```
-
-### Example E2E Test
-
-```typescript
-// e2e/my-app.spec.ts
-import { test, expect } from "@playwright/test";
-
-test("has title", async ({ page }) => {
-  await page.goto("/");
-
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/React TDD Template/);
-});
-```
+- Unit test example: see [src/App.test.tsx](src/App.test.tsx)
+- E2E test example: see [e2e/my-app.spec.ts](e2e/my-app.spec.ts)
 
 ## CI/CD Pipeline
 
@@ -343,39 +274,9 @@ The project includes proper TypeScript configuration with Vitest globals. The `t
 
 ## Development Workflow
 
-### Recommended TDD Workflow in VS Code
+### Recommended Workflow in VS Code
 
-1. **Start Development Environment**:
-
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🚀 Start Dev Server**
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🧪 Test: Unit (Watch)**
-
-2. **Test-Driven Development Cycle**:
-
-   - **Write a failing test** for your new feature
-   - **Watch the test fail** (red) in the watch mode terminal
-   - **Implement the feature** to make the test pass (green)
-   - **Refactor** code while keeping tests green
-   - **Debug if needed** using `Ctrl+Shift+D` → **🧪 Debug: Current Test File**
-
-3. **Check Coverage**:
-
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **📊 View: Coverage Report**
-   - Interactive HTML report opens in your browser
-
-4. **Run E2E Tests**:
-
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **🎭 Test: E2E (Playwright)**
-   - View results: **🎭 View: Playwright Report**
-
-5. **Complete Testing**:
-
-   - `Ctrl+Shift+P` → "Tasks: Run Task" → **📊 Test: All with Reports**
-   - Runs everything and opens all reports
-
-6. **Commit and Deploy**:
-   - **Commit and push** to trigger CI/CD
-   - **Review** GitHub Actions results and live deployment
+Use VS Code tasks for development, unit tests, coverage, and E2E runs. For a beginner-friendly TDD walkthrough, refer to [README.md](README.md). Maintain CI/CD and deployment steps in this document.
 
 ### VS Code Features
 
@@ -460,6 +361,125 @@ This template includes all necessary dependencies:
 - **Playwright** for E2E testing
 - **Istanbul** for coverage reporting
 - **http-server** for serving reports locally
+
+## Maintainer Guide
+
+### Branching Strategy
+
+- **main**: Protected release branch; always green; deploys come from here.
+- **dev**: Integration branch for ongoing work; merges from feature/fix/docs branches.
+- **Feature branches**: `feat/<scope>-<short-desc>` (e.g., `feat/button-variants`).
+- **Fix branches**: `fix/<scope>-<short-desc>` (e.g., `fix/coverage-threshold`).
+- **Docs branches**: `docs/<short-desc>` (e.g., `docs/developer-readme`).
+- **Chore branches**: `chore/<area>-<short-desc>` for tooling, deps, CI.
+- **Releases/tags**: `vX.Y.Z` using semantic versioning.
+- **Merge policy**: Prefer squash merges for features/fixes to keep history tidy; ensure `dev` is up to date before merging to `main`.
+
+### Pull Request Guidelines
+
+- **Title format**: `type(scope): summary`
+  - Examples: `feat(header): add sticky behavior`, `fix(ci): cache playwright browsers`.
+- **Description**: Explain the change (what/why), link issues, include screenshots or report links when relevant (coverage, Playwright report).
+- **Checklist**:
+  - Tests pass locally and in CI (unit + E2E where applicable).
+  - Coverage does not regress meaningfully; update/add tests when needed.
+  - Update docs when tasks/commands/config change.
+  - Verify `vite.config.ts` `base` path when repo name changes.
+  - No generated artifacts committed (coverage/, playwright-report/, test-results/).
+- **Scope & size**: Keep PRs focused and reasonably small; split large changes.
+- **CI & reviews**: Require passing checks and at least one review approval before merging.
+- **Labels**: Apply `feat`, `fix`, `docs`, `chore`, `ci`, or `deps` as appropriate.
+
+### Auto-sync: main → dev (Workflow)
+
+- The GitHub Actions workflow [./.github/workflows/auto-merge-main-to-dev.yml](.github/workflows/auto-merge-main-to-dev.yml) automatically syncs `dev` with `main` on every push to `main`.
+- Behavior:
+  - Creates a `sync/main-to-dev-<timestamp>` branch from `dev` (or from `main` if `dev` doesn’t exist yet).
+  - Merges `origin/main` into that sync branch and opens a PR targeting `dev`.
+  - Auto-merges the PR if there are no conflicts.
+  - On conflicts, it pushes the sync branch, opens a PR to `dev`, and creates an issue with step-by-step resolution instructions.
+- Guidance:
+  - Do not manually merge `main` into `dev` during normal operation; let the workflow handle it.
+  - If a conflict PR/issue is created, resolve conflicts in the PR, push updates to the sync branch, and complete the merge.
+  - Avoid direct pushes to `dev`/`main`; use PRs for traceability.
+
+### Git CLI Quick Reference
+
+Start a feature/fix/docs branch from `dev`:
+
+```bash
+git checkout dev
+git pull origin dev
+git checkout -b feat/<scope>-<short-desc>
+# or: fix/<scope>-<short-desc>, docs/<short-desc>, chore/<area>-<short-desc>
+```
+
+Stage and commit changes:
+
+```bash
+git add -A
+git commit -m "feat(scope): concise summary"
+```
+
+Push your branch and set upstream:
+
+```bash
+git push -u origin feat/<scope>-<short-desc>
+```
+
+Keep branch up to date with latest `dev` (rebase preferred):
+
+```bash
+git fetch origin
+git rebase origin/dev
+# resolve conflicts, then:
+git add <files>
+git rebase --continue
+```
+
+Open a PR (GitHub UI preferred). Optional via GitHub CLI if installed:
+
+```bash
+# from your feature branch
+gh pr create --fill --base dev --head feat/<scope>-<short-desc>
+```
+
+After approval, squash merge via GitHub UI. Optionally squash locally:
+
+```bash
+git checkout dev
+git pull origin dev
+git merge --squash feat/<scope>-<short-desc>
+git commit -m "feat(scope): summary (squash)"
+git push origin dev
+```
+
+Release tagging (semantic version):
+
+```bash
+git checkout main
+git pull origin main
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
+
+Sync `dev` with `main` after release:
+
+Note: This is handled automatically by the auto-sync workflow. Use the manual commands below only for exceptional cases (e.g., CI outage).
+
+```bash
+git checkout dev
+git pull origin dev
+git merge --ff-only origin/main
+git push origin dev
+```
+
+Cleanup merged branches:
+
+```bash
+git branch -d feat/<scope>-<short-desc>
+git push origin --delete feat/<scope>-<short-desc>
+```
 
 ### VS Code Extensions (Auto-recommended)
 

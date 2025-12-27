@@ -1,5 +1,7 @@
 # Learn Test-Driven Development (TDD) with React 🎯
 
+> Audience: Beginners learning React and TDD. Maintainers should use [README-TECHNICAL.md](README-TECHNICAL.md) for configuration, CI/CD, and deployment.
+
 A beginner-friendly React template designed for high school students to learn Test-Driven Development (TDD). This template comes with everything pre-configured so you can focus on learning React and TDD concepts!
 
 > 🔧 **Need technical details?** Check out our [Technical Documentation](README-TECHNICAL.md) for advanced configuration and deployment info.
@@ -219,7 +221,7 @@ Congratulations! 🎉 You just did Test-Driven Development!
   - **🚀 Start Dev Server** - See your app in the browser
   - **🧪 Test: Unit (Watch)** - Tests run automatically as you code
   - **📊 View: Coverage Report** - See what you've tested
-  - **🎭 Test: E2E (Playwright)** - Test like a real user
+  - For advanced tasks (E2E, reports, build), see [README-TECHNICAL.md](README-TECHNICAL.md)
 
 #### Debugging (Finding and fixing bugs)
 
@@ -364,12 +366,7 @@ Don't worry about these right away - focus on learning TDD first!
 
 ### Sharing Your Project Online
 
-This template can automatically put your project on the internet using GitHub Pages:
-
-1. **Push your code to GitHub** (your teacher can help with this)
-2. **Go to Settings → Pages** in your GitHub repository
-3. **Select "GitHub Actions"** as the source
-4. **Your app will be live** at `https://YOUR_USERNAME.github.io/YOUR_PROJECT_NAME/`
+Publishing is supported via GitHub Pages. Follow the deployment guide in [README-TECHNICAL.md](README-TECHNICAL.md) for step-by-step instructions.
 
 ### Project Structure (What all these folders do)
 
@@ -389,10 +386,10 @@ your-project/
 ### More Commands (When You Need Them)
 
 ```bash
-npm run build          # Package your app for sharing
-npm run lint           # Check your code style
-npm run preview        # Preview your built app
-npm run test:e2e       # Test your app like a user
+npm run dev            # See your app in the browser
+npm test               # Run unit tests once
+npm test -- --watch    # Re-run tests automatically on change
+npm run test:coverage  # Generate coverage report
 ```
 
 ## Ready to Start Learning? 🎯
