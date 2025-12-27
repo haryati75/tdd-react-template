@@ -123,6 +123,12 @@ jobs:
               console.log('PR will need to be merged manually after conflicts are resolved');
             }
 
+      - name: Push sync branch on conflict
+        if: steps.merge.outcome == 'failure'
+        continue-on-error: true
+        run: |
+          git push origin ${{ steps.merge.outputs.sync_branch }}
+
       - name: Create PR and issue on conflict
         if: steps.merge.outcome == 'failure'
         uses: actions/github-script@v7
@@ -131,24 +137,30 @@ jobs:
           script: |
             const syncBranch = '${{ steps.merge.outputs.sync_branch }}';
 
-            // Push the sync branch even with conflicts so it can be used for resolution
-            const { execSync } = require('child_process');
+            // Ensure dev branch exists before creating PR
+            let devExists = false;
             try {
-              execSync(`git push origin ${syncBranch}`, { stdio: 'inherit' });
-            } catch (error) {
-              console.log('Failed to push sync branch, it may already exist');
-            }
-
-            // Create PR with conflicts
-            let prNumber;
-            try {
-              const pr = await github.rest.pulls.create({
+              await github.rest.repos.getBranch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                title: '🔀 Auto-sync (CONFLICTS): main → dev',
-                head: syncBranch,
-                base: 'dev',
-                body: `## ⚠️ Automatic Sync with Conflicts
+                branch: 'dev'
+              });
+              devExists = true;
+            } catch (error) {
+              console.log('Dev branch does not exist, will skip PR creation');
+            }
+
+            // Create PR with conflicts only if dev branch exists
+            let prNumber;
+            if (devExists) {
+              try {
+                const pr = await github.rest.pulls.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: '🔀 Auto-sync (CONFLICTS): main → dev',
+                  head: syncBranch,
+                  base: 'dev',
+                  body: `## ⚠️ Automatic Sync with Conflicts
 
             This PR was automatically created to sync changes from \`main\` to \`dev\`, but **merge conflicts were detected**.
 
@@ -164,12 +176,16 @@ jobs:
 
             ---
             *This is an automated pull request that requires manual conflict resolution.*`,
-              });
-              prNumber = pr.data.number;
-              console.log(`Created PR #${prNumber} with conflicts`);
-            } catch (error) {
-              console.log(`Failed to create PR: ${error.message}`);
+                });
+                prNumber = pr.data.number;
+                console.log(`Created PR #${prNumber} with conflicts`);
+              } catch (error) {
+                console.log(`Failed to create PR: ${error.message}`);
+                prNumber = 'N/A';
+              }
+            } else {
               prNumber = 'N/A';
+              console.log('Skipped PR creation because dev branch does not exist');
             }
 
             // Create issue for conflict resolution
