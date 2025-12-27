@@ -26,19 +26,20 @@ For learner onboarding and TDD tutorial, use [README.md](README.md). Maintainers
 1. Clone or use GitHub “Use this template”.
 2. Install dependencies:
 
-  ```bash
-  npm install
-  ```
+```bash
+npm install
+```
 
 3. Install Playwright browsers (first time only):
 
-  ```bash
-  npx playwright install --with-deps
-  ```
+```bash
+npx playwright install --with-deps
+```
 
 4. Update configuration:
-  - Update `package.json` metadata
-  - Set `base` in `vite.config.ts` to your repo name
+
+- Update `package.json` metadata
+- Set `base` in `vite.config.ts` to your repo name
 
 ### Running the Project
 
@@ -360,6 +361,125 @@ This template includes all necessary dependencies:
 - **Playwright** for E2E testing
 - **Istanbul** for coverage reporting
 - **http-server** for serving reports locally
+
+## Maintainer Guide
+
+### Branching Strategy
+
+- **main**: Protected release branch; always green; deploys come from here.
+- **dev**: Integration branch for ongoing work; merges from feature/fix/docs branches.
+- **Feature branches**: `feat/<scope>-<short-desc>` (e.g., `feat/button-variants`).
+- **Fix branches**: `fix/<scope>-<short-desc>` (e.g., `fix/coverage-threshold`).
+- **Docs branches**: `docs/<short-desc>` (e.g., `docs/developer-readme`).
+- **Chore branches**: `chore/<area>-<short-desc>` for tooling, deps, CI.
+- **Releases/tags**: `vX.Y.Z` using semantic versioning.
+- **Merge policy**: Prefer squash merges for features/fixes to keep history tidy; ensure `dev` is up to date before merging to `main`.
+
+### Pull Request Guidelines
+
+- **Title format**: `type(scope): summary`
+  - Examples: `feat(header): add sticky behavior`, `fix(ci): cache playwright browsers`.
+- **Description**: Explain the change (what/why), link issues, include screenshots or report links when relevant (coverage, Playwright report).
+- **Checklist**:
+  - Tests pass locally and in CI (unit + E2E where applicable).
+  - Coverage does not regress meaningfully; update/add tests when needed.
+  - Update docs when tasks/commands/config change.
+  - Verify `vite.config.ts` `base` path when repo name changes.
+  - No generated artifacts committed (coverage/, playwright-report/, test-results/).
+- **Scope & size**: Keep PRs focused and reasonably small; split large changes.
+- **CI & reviews**: Require passing checks and at least one review approval before merging.
+- **Labels**: Apply `feat`, `fix`, `docs`, `chore`, `ci`, or `deps` as appropriate.
+
+### Auto-sync: main → dev (Workflow)
+
+- The GitHub Actions workflow [./.github/workflows/auto-merge-main-to-dev.yml](.github/workflows/auto-merge-main-to-dev.yml) automatically syncs `dev` with `main` on every push to `main`.
+- Behavior:
+  - Creates a `sync/main-to-dev-<timestamp>` branch from `dev` (or from `main` if `dev` doesn’t exist yet).
+  - Merges `origin/main` into that sync branch and opens a PR targeting `dev`.
+  - Auto-merges the PR if there are no conflicts.
+  - On conflicts, it pushes the sync branch, opens a PR to `dev`, and creates an issue with step-by-step resolution instructions.
+- Guidance:
+  - Do not manually merge `main` into `dev` during normal operation; let the workflow handle it.
+  - If a conflict PR/issue is created, resolve conflicts in the PR, push updates to the sync branch, and complete the merge.
+  - Avoid direct pushes to `dev`/`main`; use PRs for traceability.
+
+### Git CLI Quick Reference
+
+Start a feature/fix/docs branch from `dev`:
+
+```bash
+git checkout dev
+git pull origin dev
+git checkout -b feat/<scope>-<short-desc>
+# or: fix/<scope>-<short-desc>, docs/<short-desc>, chore/<area>-<short-desc>
+```
+
+Stage and commit changes:
+
+```bash
+git add -A
+git commit -m "feat(scope): concise summary"
+```
+
+Push your branch and set upstream:
+
+```bash
+git push -u origin feat/<scope>-<short-desc>
+```
+
+Keep branch up to date with latest `dev` (rebase preferred):
+
+```bash
+git fetch origin
+git rebase origin/dev
+# resolve conflicts, then:
+git add <files>
+git rebase --continue
+```
+
+Open a PR (GitHub UI preferred). Optional via GitHub CLI if installed:
+
+```bash
+# from your feature branch
+gh pr create --fill --base dev --head feat/<scope>-<short-desc>
+```
+
+After approval, squash merge via GitHub UI. Optionally squash locally:
+
+```bash
+git checkout dev
+git pull origin dev
+git merge --squash feat/<scope>-<short-desc>
+git commit -m "feat(scope): summary (squash)"
+git push origin dev
+```
+
+Release tagging (semantic version):
+
+```bash
+git checkout main
+git pull origin main
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
+
+Sync `dev` with `main` after release:
+
+Note: This is handled automatically by the auto-sync workflow. Use the manual commands below only for exceptional cases (e.g., CI outage).
+
+```bash
+git checkout dev
+git pull origin dev
+git merge --ff-only origin/main
+git push origin dev
+```
+
+Cleanup merged branches:
+
+```bash
+git branch -d feat/<scope>-<short-desc>
+git push origin --delete feat/<scope>-<short-desc>
+```
 
 ### VS Code Extensions (Auto-recommended)
 
