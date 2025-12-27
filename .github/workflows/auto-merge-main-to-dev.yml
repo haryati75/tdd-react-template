@@ -24,8 +24,14 @@ jobs:
         id: merge
         continue-on-error: true
         run: |
-          git fetch origin dev:dev || git checkout -b dev origin/main
-          git checkout dev
+          # Fetch the dev branch, or create it if it doesn't exist remotely
+          if git fetch origin dev:dev; then
+            git checkout dev
+          else
+            echo "Dev branch doesn't exist, creating from main"
+            git checkout -b dev
+          fi
+          # Merge main into dev with no-fast-forward
           git merge --no-ff origin/main -m "Auto-merge main into dev"
 
       - name: Push changes
