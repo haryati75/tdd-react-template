@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
       issues: write
     steps:
       - name: Checkout repository
@@ -23,72 +24,214 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Merge main into dev
+      - name: Create sync branch and merge
         id: merge
         continue-on-error: true
         run: |
+          # Create timestamp for unique branch name
+          TIMESTAMP=$(date +%s)
+          SYNC_BRANCH="sync/main-to-dev-${TIMESTAMP}"
+          echo "sync_branch=${SYNC_BRANCH}" >> $GITHUB_OUTPUT
+
           # Fetch the dev branch, or create it if it doesn't exist remotely
           if git fetch origin dev:dev; then
-            git checkout dev
+            echo "Dev branch exists, creating sync branch from dev"
+            git checkout -b ${SYNC_BRANCH} dev
           else
-            echo "Dev branch doesn't exist, creating from main"
-            git checkout -b dev
+            echo "Dev branch doesn't exist, creating sync branch from main"
+            git checkout -b ${SYNC_BRANCH}
+            # Mark that dev needs to be created
+            echo "create_dev=true" >> $GITHUB_OUTPUT
           fi
-          # Merge main into dev with no-fast-forward
+
+          # Merge main into sync branch with no-fast-forward
           git merge --no-ff origin/main -m "Auto-merge main into dev"
 
-      - name: Push changes
+      - name: Push sync branch
         if: steps.merge.outcome == 'success'
         run: |
-          git push origin dev
+          git push origin ${{ steps.merge.outputs.sync_branch }}
 
-      - name: Create issue on conflict
+      - name: Create dev branch if needed
+        if: steps.merge.outcome == 'success' && steps.merge.outputs.create_dev == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // Create dev branch from main
+            const mainRef = await github.rest.git.getRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'heads/main'
+            });
+
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/heads/dev',
+              sha: mainRef.data.object.sha
+            });
+            console.log('Created dev branch from main');
+
+      - name: Create and auto-merge PR
+        if: steps.merge.outcome == 'success'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const syncBranch = '${{ steps.merge.outputs.sync_branch }}';
+            const createDev = '${{ steps.merge.outputs.create_dev }}' === 'true';
+
+            // Create PR
+            const pr = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔄 Auto-sync: main → dev',
+              head: syncBranch,
+              base: 'dev',
+              body: `## Automatic Sync from main to dev
+
+            This PR was automatically created to sync changes from \`main\` to \`dev\`.
+
+            ${createDev ? '**Note:** This PR also creates the \`dev\` branch for the first time.\n\n' : ''}### Details
+            - **Workflow:** ${context.workflow}
+            - **Run ID:** ${context.runId}
+            - **Commit SHA:** ${context.sha}
+            - **Triggered by:** ${context.actor}
+
+            ### Auto-merge
+            This PR will be automatically merged if there are no conflicts.
+
+            ---
+            *This is an automated pull request. It will be merged automatically.*`,
+            });
+            console.log(`Created PR #${pr.data.number}`);
+
+            // Auto-merge the PR
+            try {
+              await github.rest.pulls.merge({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.data.number,
+                merge_method: 'merge',
+                commit_title: `Auto-merge main into dev (#${pr.data.number})`,
+                commit_message: 'Automatic merge from main to dev branch'
+              });
+              console.log(`Auto-merged PR #${pr.data.number}`);
+            } catch (error) {
+              console.log(`Failed to auto-merge PR #${pr.data.number}: ${error.message}`);
+              console.log('PR will need to be merged manually after conflicts are resolved');
+            }
+
+      - name: Push sync branch on conflict
+        if: steps.merge.outcome == 'failure'
+        continue-on-error: true
+        run: |
+          git push origin ${{ steps.merge.outputs.sync_branch }}
+
+      - name: Create PR and issue on conflict
         if: steps.merge.outcome == 'failure'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issue = await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: '🔀 Auto-merge conflict: main → dev',
-              body: `## Auto-merge Failed
-            
-            The automatic merge from \`main\` to \`dev\` encountered conflicts and requires manual resolution.
-            
+            const syncBranch = '${{ steps.merge.outputs.sync_branch }}';
+
+            // Ensure dev branch exists before creating PR
+            let devExists = false;
+            try {
+              await github.rest.repos.getBranch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                branch: 'dev'
+              });
+              devExists = true;
+            } catch (error) {
+              console.log('Dev branch does not exist, will skip PR creation');
+            }
+
+            // Create PR with conflicts only if dev branch exists
+            let prNumber;
+            if (devExists) {
+              try {
+                const pr = await github.rest.pulls.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: '🔀 Auto-sync (CONFLICTS): main → dev',
+                  head: syncBranch,
+                  base: 'dev',
+                  body: `## ⚠️ Automatic Sync with Conflicts
+
+            This PR was automatically created to sync changes from \`main\` to \`dev\`, but **merge conflicts were detected**.
+
             ### Details
             - **Workflow:** ${context.workflow}
             - **Run ID:** ${context.runId}
             - **Commit SHA:** ${context.sha}
             - **Triggered by:** ${context.actor}
-            
+            - **Sync Branch:** \`${syncBranch}\`
+
+            ### Resolution Required
+            Please resolve the conflicts following the steps in the linked issue.
+
+            ---
+            *This is an automated pull request that requires manual conflict resolution.*`,
+                });
+                prNumber = pr.data.number;
+                console.log(`Created PR #${prNumber} with conflicts`);
+              } catch (error) {
+                console.log(`Failed to create PR: ${error.message}`);
+                prNumber = 'N/A';
+              }
+            } else {
+              prNumber = 'N/A';
+              console.log('Skipped PR creation because dev branch does not exist');
+            }
+
+            // Create issue for conflict resolution
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔀 Auto-merge conflict: main → dev',
+              body: `## Auto-merge Failed
+
+            The automatic merge from \`main\` to \`dev\` encountered conflicts and requires manual resolution.
+
+            ${prNumber !== 'N/A' ? `### Pull Request\n- **PR #${prNumber}**: Sync PR created for conflict resolution\n- Review and resolve conflicts in the PR: [#${prNumber}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/pull/${prNumber})\n\n` : ''}### Details
+            - **Workflow:** ${context.workflow}
+            - **Run ID:** ${context.runId}
+            - **Commit SHA:** ${context.sha}
+            - **Triggered by:** ${context.actor}
+            - **Sync Branch:** \`${syncBranch}\`
+
             ### Manual Resolution Steps
-            
-            1. Pull the latest changes:
+
+            1. Fetch the sync branch:
                \`\`\`bash
-               git fetch origin
-               git checkout dev
-               git pull origin dev
+               git fetch origin ${syncBranch}
+               git checkout ${syncBranch}
                \`\`\`
-            
-            2. Merge main into dev:
-               \`\`\`bash
-               git merge origin/main
-               \`\`\`
-            
-            3. Resolve any conflicts in your editor
-            
-            4. Complete the merge:
+
+            2. Resolve conflicts in your editor (files with conflict markers)
+
+            3. Stage and commit the resolved conflicts:
                \`\`\`bash
                git add .
-               git commit
-               git push origin dev
+               git commit -m "Resolve merge conflicts from main to dev"
                \`\`\`
-            
-            5. Close this issue once resolved
-            
+
+            4. Push the resolved changes:
+               \`\`\`bash
+               git push origin ${syncBranch}
+               \`\`\`
+
+            5. The PR will update automatically - review and merge it
+
+            6. Close this issue once the PR is merged
+
             ### Resources
             - [GitHub Docs: Resolving Merge Conflicts](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line)
+            ${prNumber !== 'N/A' ? `- [Pull Request #${prNumber}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/pull/${prNumber})` : ''}
             - [Workflow Run](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
               labels: ['merge-conflict', 'automated']
             });
